@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1",
+    "facultyName": "Dr. Amit Sharma",
+    "classId": "CS-202",
+    "studentId": null,
+    "title": "Data Structures Midterm Examination",
+    "description": "The midterm exam for CS-202 will take place on July 18th at 10:00 AM in Hall A. The syllabus covers Chapters 1 to 5, including trees and graphs.",
+    "dateTime": "2026-07-10T14:30:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "2",
+    "facultyName": "Admin Office",
+    "classId": "CS-202",
+    "studentId": "STU-101",
+    "title": "Pending Tuition Fees Alert",
+    "description": "Dear Aarav Sharma (STU-101), your tuition fee payment of ₹15,000 for the current semester is overdue. Please settle this by July 15th to avoid late registration charges.",
+    "dateTime": "2026-07-10T10:15:00.000Z",
+    "category": "fees"
+  },
+  {
+    "id": "3",
+    "facultyName": "Prof. Sunita Rao",
+    "classId": "CS-202",
+    "studentId": null,
+    "title": "Lab Assignment 3 Submission",
+    "description": "Please upload your solutions for Lab 3 (Binary Search Trees implementation) on the student portal before Friday midnight. Late submissions will attract a 10% penalty per day.",
+    "dateTime": "2026-07-10T08:10:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "4",
+    "facultyName": "Sports Coordinator",
+    "classId": "CS-202",
+    "studentId": null,
+    "title": "Annual Inter-Class Cricket Tournament",
+    "description": "Team registration for the cricket tournament starts today. Interested students from CS-202 should submit their team roster to Coach Rajesh by Tuesday.",
+    "dateTime": "2026-07-09T16:00:00.000Z",
+    "category": "events"
+  },
+  {
+    "id": "5",
+    "facultyName": "Dr. Amit Sharma",
+    "classId": "CS-202",
+    "studentId": "STU-101",
+    "title": "Academic Warning: Low Attendance",
+    "description": "Your attendance in CS-202 is currently 62%, which is below the mandatory 75% threshold. Please meet your advisor, Dr. Amit Sharma, to discuss this.",
+    "dateTime": "2026-07-09T11:00:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "6",
+    "facultyName": "Dr. Rajesh Kulkarni",
+    "classId": "CS-202",
+    "studentId": "STU-102",
+    "title": "Special Makeup Lab Assignment",
+    "description": "This notice is for Neha Patel (STU-102) only. You are scheduled for a makeup lab session on Physics-II this Saturday at 9:00 AM.",
+    "dateTime": "2026-07-08T09:30:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "7",
+    "facultyName": "Admissions Desk",
+    "classId": "CS-101",
+    "studentId": null,
+    "title": "Welcome Freshmen: CS-101 Orientation",
+    "description": "Welcome to the Department of Computer Science. The orientation program will be held online on July 12th. Joining link has been sent to your registered email.",
+    "dateTime": "2026-07-07T15:20:00.000Z",
+    "category": "general"
+  },
+  {
+    "id": "8",
+    "facultyName": "Scholarship Cell",
+    "classId": "CS-101",
+    "studentId": "STU-301",
+    "title": "Scholarship Renewal Documentation",
+    "description": "This notice is for Rohan Das (STU-301). Please upload your first-year marksheet on the portal to process your scholarship renewal for next semester.",
+    "dateTime": "2026-07-07T11:10:00.000Z",
+    "category": "fees"
+  },
+  {
+    "id": "9",
+    "facultyName": "Placement Cell",
+    "classId": "CS-202",
+    "studentId": null,
+    "title": "Placement Prep Guest Lecture",
+    "description": "A guest lecture on 'Acing Technical Coding Interviews' by a senior engineer from Google is scheduled for CS-202 students on July 14th at 2:00 PM in the auditorium.",
+    "dateTime": "2026-07-10T15:00:00.000Z",
+    "category": "general"
+  },
+  {
+    "id": "10",
+    "facultyName": "Library Desk",
+    "classId": "CS-202",
+    "studentId": "STU-102",
+    "title": "Overdue Book Return Notice",
+    "description": "Dear Neha Patel (STU-102), the book 'Introduction to Algorithms' borrowed on June 15th is overdue. Please return it or renew it to avoid daily fines.",
+    "dateTime": "2026-07-10T12:00:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "11",
+    "facultyName": "Prof. Vikram Malhotra",
+    "classId": "CS-101",
+    "studentId": null,
+    "title": "Discrete Mathematics Quiz Postponement",
+    "description": "Dear CS-101 students, the quiz scheduled for tomorrow is postponed to next Monday due to the department sports meet.",
+    "dateTime": "2026-07-10T11:45:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "12",
+    "facultyName": "Dr. Anjali Desai",
+    "classId": "CS-101",
+    "studentId": "STU-301",
+    "title": "Dean's List Congratulatory Note",
+    "description": "Congratulations Rohan Das (STU-301)! You have been placed on the Dean's List for your outstanding academic performance in the previous semester.",
+    "dateTime": "2026-07-10T09:00:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "13",
+    "facultyName": "Electrical Department",
+    "classId": "EE-101",
+    "studentId": null,
+    "title": "EE-101 Circuits Lab Notice",
+    "description": "All Electrical Engineering students must bring their lab manuals for the circuit synthesis practical session this Wednesday.",
+    "dateTime": "2026-07-10T08:00:00.000Z",
+    "category": "academic"
+  },
+  {
+    "id": "14",
+    "facultyName": "Finance Office",
+    "classId": "EE-101",
+    "studentId": "STU-999",
+    "title": "EE Student Personal Fee Clearance",
+    "description": "This notice is for STU-999 (EE Student). Please clear your balance at the accounts window before Friday.",
+    "dateTime": "2026-07-09T09:00:00.000Z",
+    "category": "fees"
+  },
+  {
+    "id": "15",
+    "facultyName": "Dr. Anjali Desai",
+    "classId": "CS-303",
+    "studentId": null,
+    "title": "Compiler Design Project Groups",
+    "description": "Dear Third Year students (CS-303), project team allocations for the Compiler Design course are uploaded. Please start working on the lexical analyzer stage.",
+    "dateTime": "2026-07-10T10:00:00.000Z",
+    "category": "academic"
+  }
+]
