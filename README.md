@@ -87,12 +87,14 @@ npx expo start -c
 
 ---
 
-## 🔑 Developer Quick Logins
+## 🔑 Developer Quick Logins (Testing Credentials)
 
-For easy testing, you can use the **Quick Login** cards at the bottom of the sign-in screen, or type these credentials:
+For easy testing and verification of the secure notification filtering logic, you can log in using the following Student IDs and Class IDs:
 
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Student** | `student@edunotify.com` | `password` |
-| **Parent** | `parent@edunotify.com` | `password` |
-| **Educator (Teacher)** | `teacher@edunotify.com` | `password` |
+| Student Name | Student ID | Class ID (Password) | Visible Notifications (Filtered Output) |
+| :--- | :--- | :--- | :--- |
+| **Aarav Sharma** | `STU-101` | `CS-202` | Renders all `CS-202` Class Broadcasts + Aarav's Personal notifications. |
+| **Neha Patel** | `STU-102` | `CS-202` | Renders all `CS-202` Class Broadcasts + Neha's Personal notifications (*Aarav's personal data is hidden*). |
+| **Rohan Das** | `STU-301` | `CS-101` | Renders all `CS-101` Class Broadcasts + Rohan's Personal notifications (*all CS-202 data is hidden*). |
+
+*(Note: There is no separate password field. Use the **Student ID** and **Class ID** from the table above to log in.)*
