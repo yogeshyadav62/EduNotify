@@ -747,3 +747,17 @@ body {
 .theme-toggle:hover {
   background-color: var(--bg-tertiary);
 }
+
+/* Spinner Animation for loading indicators */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
