@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import Animated, { FadeIn } from 'react-native-reanimated';
 import { useAppDispatch } from '../src/redux/hooks';
 import { restoreAuth } from '../src/redux/slices/authSlice';
 import { storage } from '../src/utils/storage';
@@ -12,10 +10,7 @@ export default function SplashScreen() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      autoNavigate();
-    }, 800);
-    return () => clearTimeout(timer);
+    autoNavigate();
   }, []);
 
   const autoNavigate = async () => {
@@ -37,32 +32,5 @@ export default function SplashScreen() {
     }
   };
 
-  return (
-    <View className="flex-1 bg-white justify-center items-center px-6">
-      {/* Top Logo emblem */}
-      <Animated.View
-        entering={FadeIn.duration(800)}
-        className="items-center mb-8"
-      >
-        {/* Enlarged Logo (w-64 h-64) */}
-        <Image
-          source={require('../assets/images/logo.png')}
-          className="w-64 h-64"
-          resizeMode="contain"
-        />
-      </Animated.View>
-
-      {/* Center Illustration using login1.png */}
-      <Animated.View
-        entering={FadeIn.delay(300).duration(800)}
-        className="w-full items-center justify-center"
-      >
-        <Image
-          source={require('../assets/images/login1.png')}
-          className="w-full h-80"
-          resizeMode="contain"
-        />
-      </Animated.View>
-    </View>
-  );
+  return null;
 }
