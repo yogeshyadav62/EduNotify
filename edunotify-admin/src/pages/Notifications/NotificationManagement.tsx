@@ -1044,21 +1044,21 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
       )}
       {/* ── Image Crop Modal ── */}
       {cropModalOpen && (
-        <div className="modal-overlay" style={{ zIndex: 1100 }}>
-          <div className="modal-container" style={{ maxWidth: 700, width: '95%' }}>
+        <div className="modal-backdrop" style={{ zIndex: 1100 }}>
+          <div className="modal-content" style={{ maxWidth: '700px', width: '95%' }}>
             <div className="modal-header">
-              <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Crop size={18} /> Crop Image
               </h3>
-              <button className="btn-icon" onClick={() => { setCropModalOpen(false); setCropSrc(''); }}>
-                <X size={20} />
+              <button className="btn-icon" type="button" onClick={() => { setCropModalOpen(false); setCropSrc(''); }}>
+                <X size={18} />
               </button>
             </div>
-            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0 }}>
                 Drag the handles to crop, then click <strong>Confirm Crop</strong>.
               </p>
-              <div style={{ maxHeight: '60vh', overflow: 'auto', width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ maxHeight: '50vh', overflow: 'auto', width: '100%', display: 'flex', justifyContent: 'center' }}>
                 <ReactCrop
                   crop={crop}
                   onChange={(c) => setCrop(c)}
@@ -1070,7 +1070,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                     src={cropSrc}
                     onLoad={onImageLoad}
                     alt="crop-source"
-                    style={{ maxWidth: '100%', maxHeight: '55vh', display: 'block' }}
+                    style={{ maxWidth: '100%', maxHeight: '45vh', display: 'block' }}
                   />
                 </ReactCrop>
               </div>
