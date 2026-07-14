@@ -44,22 +44,22 @@ export const NotificationCard = ({
     <Animated.View
       entering={FadeInUp.delay(Math.min(index * 50, 300)).duration(350)}
       exiting={FadeOutLeft.duration(200)}
-      className="mb-3 px-5"
+      className="mb-2.5 px-5"
     >
       <TouchableOpacity
         onPress={onPress}
-        className={`bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex-row items-start ${isRead ? 'opacity-70' : ''
+        className={`bg-white rounded-2xl p-2.5 border border-slate-100 shadow-sm flex-row items-center ${isRead ? 'opacity-70' : ''
           }`}
         activeOpacity={0.7}
       >
-        {/* Left Side: Circular Type Icon (Large Indicator) */}
+        {/* Left Side: Circular Type Icon (Compact Indicator) */}
         <View
-          className={`w-12 h-12 rounded-full items-center justify-center mr-3.5 ${isPersonal ? 'bg-blue-50' : 'bg-orange-50'
+          className={`w-9 h-9 rounded-full items-center justify-center mr-2.5 ${isPersonal ? 'bg-blue-50' : 'bg-orange-50'
             }`}
         >
           <Ionicons
             name={isPersonal ? 'person' : 'volume-high'}
-            size={22}
+            size={16}
             color={isPersonal ? '#0B66EF' : '#F97316'}
           />
         </View>
@@ -67,9 +67,9 @@ export const NotificationCard = ({
         {/* Right Side: Column Content */}
         <View className="flex-1">
           {/* Top Row: Category Label */}
-          <View className="flex-row justify-between items-center mb-1">
+          <View className="flex-row justify-between items-center mb-0.5">
             <AppText
-              className={`text-[9px] font-black uppercase tracking-widest ${isPersonal ? 'text-blue-600' : 'text-orange-500'
+              className={`text-[8px] font-black uppercase tracking-widest ${isPersonal ? 'text-blue-600' : 'text-orange-500'
                 }`}
             >
               {isPersonal ? 'PERSONAL' : 'BROADCAST'}
@@ -77,32 +77,32 @@ export const NotificationCard = ({
           </View>
 
           {/* Middle Row: Title & Description */}
-          <View className="mb-2.5">
-            <AppText className="text-slate-800 text-sm font-black mb-1 leading-5">
+          <View className="mb-1.5">
+            <AppText className="text-slate-800 text-xs font-black mb-0.5 leading-4" numberOfLines={1}>
               {notification.title}
             </AppText>
             <AppText
-              numberOfLines={2}
-              className="text-slate-500 text-xs leading-4"
+              numberOfLines={1}
+              className="text-slate-500 text-[10px] leading-3.5"
             >
               {notification.description}
             </AppText>
           </View>
 
           {/* Bottom Row: Faculty & Time */}
-          <View className="flex-row justify-between items-center border-t border-slate-50 pt-2">
+          <View className="flex-row justify-between items-center border-t border-slate-50 pt-1.5">
             <View className="flex-row items-center">
               {avatarUrl ? (
                 <Image
                   source={{ uri: avatarUrl }}
-                  className="w-5 h-5 rounded-full mr-2 border border-slate-100"
+                  className="w-4 h-4 rounded-full mr-1.5 border border-slate-100"
                 />
               ) : (
-                <View className="bg-slate-100 w-5 h-5 rounded-full mr-2 items-center justify-center border border-slate-100">
-                  <Ionicons name="person" size={10} color={colors.slate[400]} />
+                <View className="bg-slate-100 w-4 h-4 rounded-full mr-1.5 items-center justify-center border border-slate-100">
+                  <Ionicons name="person" size={8} color={colors.slate[400]} />
                 </View>
               )}
-              <AppText className="text-[10px] font-bold text-slate-500">
+              <AppText className="text-[9px] font-bold text-slate-500">
                 {notification.facultyName}
               </AppText>
             </View>
@@ -113,7 +113,7 @@ export const NotificationCard = ({
               </AppText>
               <Ionicons
                 name={(notification.isSeen || isRead) ? "checkmark-done" : (notification.isDelivered ? "checkmark-done" : "checkmark")}
-                size={14}
+                size={12}
                 color={(notification.isSeen || isRead) ? "#0B66EF" : "#94A3B8"}
               />
             </View>
