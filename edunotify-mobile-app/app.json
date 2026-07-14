@@ -32,6 +32,7 @@
       "favicon": "./assets/launcher.png"
     },
     "plugins": [
+      "./plugins/withAndroidColorReplace",
       "expo-router",
       "@react-native-firebase/app",
       [
