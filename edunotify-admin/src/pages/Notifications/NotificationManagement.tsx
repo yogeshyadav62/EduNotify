@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Search, Edit2, Trash2, X, Calendar, Image, Paperclip, Loader2, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Calendar, Image, Paperclip, Loader2, ChevronLeft, ChevronRight, Eye, Crop } from 'lucide-react';
 import { getData, postData, putData, deleteData } from '../../utils/ApiCall';
 import { ROUTES } from '../../utils/Routes';
+import ReactCrop, { type Crop as CropType, centerCrop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 // Notification Management Component for Admin Panel
 
@@ -74,6 +76,14 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const [noticeToDelete, setNoticeToDelete] = useState('');
   const [viewNotice, setViewNotice] = useState<NotificationData | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
+  // Crop state
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [cropSrc, setCropSrc] = useState<string>('');
+  const [crop, setCrop] = useState<CropType>();
+  const [completedCrop, setCompletedCrop] = useState<CropType | null>(null);
+  const [originalFileName, setOriginalFileName] = useState('');
+  const cropImageRef = useRef<HTMLImageElement>(null);
 
   const openViewModal = (notice: NotificationData) => {
     setViewNotice(notice);
@@ -221,9 +231,68 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.type.startsWith('image/')) {
+        // Open crop modal for images
+        setOriginalFileName(file.name);
+        const reader = new FileReader();
+        reader.onload = () => {
+          setCropSrc(reader.result as string);
+          setCrop(undefined);
+          setCompletedCrop(null);
+          setCropModalOpen(true);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Non-image (PDF, doc) — skip cropping
+        setSelectedFile(file);
+      }
     }
+    // Reset input so same file can be re-selected
+    e.target.value = '';
   };
+
+  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget;
+    const initialCrop = centerCrop(
+      makeAspectCrop({ unit: '%', width: 80 }, 16 / 9, width, height),
+      width, height
+    );
+    setCrop(initialCrop);
+  }, []);
+
+  const handleCropConfirm = useCallback(async () => {
+    const image = cropImageRef.current;
+    if (!image || !completedCrop) return;
+
+    const canvas = document.createElement('canvas');
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const pixelRatio = window.devicePixelRatio || 1;
+
+    canvas.width = Math.floor(completedCrop.width * scaleX * pixelRatio);
+    canvas.height = Math.floor(completedCrop.height * scaleY * pixelRatio);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(
+      image,
+      completedCrop.x * scaleX, completedCrop.y * scaleY,
+      completedCrop.width * scaleX, completedCrop.height * scaleY,
+      0, 0,
+      completedCrop.width * scaleX, completedCrop.height * scaleY
+    );
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const croppedFile = new File([blob], originalFileName, { type: 'image/jpeg' });
+      setSelectedFile(croppedFile);
+      setCropModalOpen(false);
+      setCropSrc('');
+    }, 'image/jpeg', 0.92);
+  }, [completedCrop, originalFileName]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -721,12 +790,42 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                   {selectedFile ? (
                     <div className="file-preview">
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Paperclip size={18} style={{ color: 'var(--primary)' }} />
+                        {selectedFile.type.startsWith('image/') ? (
+                          <img
+                            src={URL.createObjectURL(selectedFile)}
+                            alt="preview"
+                            style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border)' }}
+                          />
+                        ) : (
+                          <Paperclip size={18} style={{ color: 'var(--primary)' }} />
+                        )}
                         <span style={{ fontSize: '14px', fontWeight: 500 }}>{selectedFile.name}</span>
                       </div>
-                      <button type="button" className="btn-icon btn-icon-danger" onClick={() => setSelectedFile(null)}>
-                        <X size={16} />
-                      </button>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        {selectedFile.type.startsWith('image/') && (
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            style={{ fontSize: 12, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 4 }}
+                            onClick={() => {
+                              const reader = new FileReader();
+                              reader.onload = () => {
+                                setCropSrc(reader.result as string);
+                                setOriginalFileName(selectedFile.name);
+                                setCrop(undefined);
+                                setCompletedCrop(null);
+                                setCropModalOpen(true);
+                              };
+                              reader.readAsDataURL(selectedFile);
+                            }}
+                          >
+                            <Crop size={13} /> Re-crop
+                          </button>
+                        )}
+                        <button type="button" className="btn-icon btn-icon-danger" onClick={() => setSelectedFile(null)}>
+                          <X size={16} />
+                        </button>
+                      </div>
                     </div>
                   ) : currentAttachmentUrl ? (
                     <div className="file-preview">
@@ -938,6 +1037,59 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
             <div className="modal-footer">
               <button type="button" className="btn btn-primary" onClick={() => setIsViewModalOpen(false)}>
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ── Image Crop Modal ── */}
+      {cropModalOpen && (
+        <div className="modal-overlay" style={{ zIndex: 1100 }}>
+          <div className="modal-container" style={{ maxWidth: 700, width: '95%' }}>
+            <div className="modal-header">
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Crop size={18} /> Crop Image
+              </h3>
+              <button className="btn-icon" onClick={() => { setCropModalOpen(false); setCropSrc(''); }}>
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0 }}>
+                Drag the handles to crop, then click <strong>Confirm Crop</strong>.
+              </p>
+              <div style={{ maxHeight: '60vh', overflow: 'auto', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <ReactCrop
+                  crop={crop}
+                  onChange={(c) => setCrop(c)}
+                  onComplete={(c) => setCompletedCrop(c)}
+                  style={{ maxWidth: '100%' }}
+                >
+                  <img
+                    ref={cropImageRef}
+                    src={cropSrc}
+                    onLoad={onImageLoad}
+                    alt="crop-source"
+                    style={{ maxWidth: '100%', maxHeight: '55vh', display: 'block' }}
+                  />
+                </ReactCrop>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => { setCropModalOpen(false); setCropSrc(''); }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleCropConfirm}
+                disabled={!completedCrop?.width || !completedCrop?.height}
+              >
+                <Crop size={15} /> Confirm Crop
               </button>
             </div>
           </div>
