@@ -4,6 +4,8 @@ import { Plus, Search, Edit2, Trash2, X, Calendar, Image, Paperclip, Loader2, Ch
 import { getData, postData, putData, deleteData } from '../../utils/ApiCall';
 import { ROUTES } from '../../utils/Routes';
 
+// Notification Management Component for Admin Panel
+
 interface ClassData {
   id: string;
   name: string;
