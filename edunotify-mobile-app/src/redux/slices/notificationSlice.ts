@@ -21,6 +21,12 @@ const notificationSlice = createSlice({
       state.items = action.payload;
       state.loading = false;
       state.error = null;
+      // Auto-populate readNotificationIds from backend isSeen status
+      action.payload.forEach(notice => {
+        if (notice.isSeen && !state.readNotificationIds.includes(notice.id)) {
+          state.readNotificationIds.push(notice.id);
+        }
+      });
     },
     setNotificationsFailure(state, action: PayloadAction<string>) {
       state.loading = false;

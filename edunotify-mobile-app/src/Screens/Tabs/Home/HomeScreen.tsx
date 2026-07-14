@@ -65,7 +65,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/(tabs)/profile')}
           className="active:opacity-70"
         >
-          <View className="w-8 h-8 rounded-full overflow-hidden justify-center items-center bg-white/20">
+          <View className="w-8 h-8 rounded-full overflow-hidden justify-center items-center bg-white/20 border-2 border-white">
             {user?.avatarUrl ? (
               <Image source={{ uri: user.avatarUrl }} className="w-full h-full" resizeMode="cover" />
             ) : (
