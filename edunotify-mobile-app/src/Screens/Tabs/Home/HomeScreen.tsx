@@ -100,57 +100,57 @@ export default function HomeScreen() {
           }
         >
           {/* STATS GRID */}
-          <View className="flex-row px-5 mb-6 justify-between">
+          <View className="flex-row px-5 mb-4 justify-between">
             {/* Card 1: Unread */}
-            <View className="bg-red-50 border border-red-100 rounded-3xl p-4 flex-1 mr-2.5 items-center justify-center shadow-sm">
-              <View className="bg-red-100 w-9 h-9 rounded-full items-center justify-center mb-2">
-                <Ionicons name="mail-unread-outline" size={18} color="#EF4444" />
+            <View className="bg-red-50 border border-red-100 rounded-2xl p-2.5 flex-1 mr-2 items-center justify-center shadow-sm">
+              <View className="bg-red-100 w-7 h-7 rounded-full items-center justify-center mb-1">
+                <Ionicons name="mail-unread-outline" size={14} color="#EF4444" />
               </View>
-              <AppText className="text-red-700 text-lg font-black">{unreadCount}</AppText>
-              <AppText className="text-red-500 text-[10px] font-bold mt-0.5">Unread Logs</AppText>
+              <AppText className="text-red-700 text-base font-black">{unreadCount}</AppText>
+              <AppText className="text-red-500 text-[9px] font-bold">Unread Logs</AppText>
             </View>
 
             {/* Card 2: Total Announcements */}
-            <View className="bg-blue-50 border border-blue-100 rounded-3xl p-4 flex-1 mr-2.5 items-center justify-center shadow-sm">
-              <View className="bg-blue-100 w-9 h-9 rounded-full items-center justify-center mb-2">
-                <Ionicons name="megaphone-outline" size={18} color="#0B66EF" />
+            <View className="bg-blue-50 border border-blue-100 rounded-2xl p-2.5 flex-1 mr-2 items-center justify-center shadow-sm">
+              <View className="bg-blue-100 w-7 h-7 rounded-full items-center justify-center mb-1">
+                <Ionicons name="megaphone-outline" size={14} color="#0B66EF" />
               </View>
-              <AppText className="text-blue-700 text-lg font-black">{notifications.length}</AppText>
-              <AppText className="text-blue-500 text-[10px] font-bold mt-0.5">Total Notices</AppText>
+              <AppText className="text-blue-700 text-base font-black">{notifications.length}</AppText>
+              <AppText className="text-blue-500 text-[9px] font-bold">Total Notices</AppText>
             </View>
 
             {/* Card 3: Class ID */}
-            <View className="bg-purple-50 border border-purple-100 rounded-3xl p-4 flex-1 items-center justify-center shadow-sm">
-              <View className="bg-purple-100 w-9 h-9 rounded-full items-center justify-center mb-2">
-                <Ionicons name="school-outline" size={18} color="#8B5CF6" />
+            <View className="bg-purple-50 border border-purple-100 rounded-2xl p-2.5 flex-1 items-center justify-center shadow-sm">
+              <View className="bg-purple-100 w-7 h-7 rounded-full items-center justify-center mb-1">
+                <Ionicons name="school-outline" size={14} color="#8B5CF6" />
               </View>
-              <AppText className="text-purple-700 text-[13px] font-black" numberOfLines={1}>{user?.classId || 'N/A'}</AppText>
-              <AppText className="text-purple-500 text-[10px] font-bold mt-1.5">Class Code</AppText>
+              <AppText className="text-purple-700 text-xs font-black" numberOfLines={1}>{user?.classId || 'N/A'}</AppText>
+              <AppText className="text-purple-500 text-[9px] font-bold mt-1">Class Code</AppText>
             </View>
           </View>
 
           {/* QUICK LINKS / ACTION BADGES */}
-          <View className="flex-row px-5 mb-6 justify-between gap-3">
+          <View className="flex-row px-5 mb-4 justify-between gap-2.5">
             <TouchableOpacity 
               onPress={() => router.push('/(tabs)/notifications')}
-              className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl flex-row items-center justify-center py-3 shadow-sm active:bg-slate-100"
+              className="flex-1 bg-slate-50 border border-slate-100 rounded-xl flex-row items-center justify-center py-2 shadow-sm active:bg-slate-100"
             >
-              <Ionicons name="chatbubbles-outline" size={16} color="#475569" style={{ marginRight: 6 }} />
+              <Ionicons name="chatbubbles-outline" size={14} color="#475569" style={{ marginRight: 6 }} />
               <AppText className="text-slate-700 text-xs font-bold">Open Hub</AppText>
             </TouchableOpacity>
 
             <TouchableOpacity 
               onPress={() => router.push('/(tabs)/profile')}
-              className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl flex-row items-center justify-center py-3 shadow-sm active:bg-slate-100"
+              className="flex-1 bg-slate-50 border border-slate-100 rounded-xl flex-row items-center justify-center py-2 shadow-sm active:bg-slate-100"
             >
-              <Ionicons name="person-outline" size={16} color="#475569" style={{ marginRight: 6 }} />
+              <Ionicons name="person-outline" size={14} color="#475569" style={{ marginRight: 6 }} />
               <AppText className="text-slate-700 text-xs font-bold">View Profile</AppText>
             </TouchableOpacity>
           </View>
 
           {/* RECENT NOTICES SECTION */}
-          <View className="mb-6">
-            <View className="flex-row justify-between items-center px-5 mb-3.5">
+          <View className="mb-4">
+            <View className="flex-row justify-between items-center px-5 mb-2.5">
               <AppText className="text-slate-800 text-base font-black">
                 Recent Announcements
               </AppText>
@@ -187,7 +187,7 @@ export default function HomeScreen() {
           {/* RECENT FILES & ATTACHMENTS SECTION */}
           {noticesWithAttachments.length > 0 && (
             <View className="mb-4">
-              <View className="px-5 mb-3">
+              <View className="px-5 mb-2.5">
                 <AppText className="text-slate-800 text-base font-black">
                   Important Attachments
                 </AppText>
@@ -209,24 +209,24 @@ export default function HomeScreen() {
                           Linking.openURL(item.attachmentUrl).catch(err => console.error("Couldn't open URL", err));
                         }
                       }}
-                      className="bg-slate-50 border border-slate-100 rounded-3xl p-3 w-40 mr-3 shadow-sm active:bg-slate-100"
+                      className="bg-slate-50 border border-slate-100 rounded-2xl p-2.5 w-36 mr-2.5 shadow-sm active:bg-slate-100"
                     >
-                      <View className="flex-row items-center justify-between mb-2">
-                        <View className={`w-8 h-8 rounded-xl items-center justify-center ${isPdf ? 'bg-red-100' : isImage ? 'bg-green-100' : 'bg-blue-100'}`}>
+                      <View className="flex-row items-center justify-between mb-1.5">
+                        <View className={`w-7 h-7 rounded-lg items-center justify-center ${isPdf ? 'bg-red-100' : isImage ? 'bg-green-100' : 'bg-blue-100'}`}>
                           <Ionicons 
                             name={isPdf ? 'document-text' : isImage ? 'image' : 'attach'} 
-                            size={16} 
+                            size={14} 
                             color={isPdf ? '#DC2626' : isImage ? '#16A34A' : '#2563EB'} 
                           />
                         </View>
                         <AppText className="text-[8px] font-bold text-slate-400 uppercase">{item.category}</AppText>
                       </View>
                       
-                      <AppText className="text-slate-800 text-[11px] font-black mb-1.5 leading-4" numberOfLines={2}>
+                      <AppText className="text-slate-800 text-[10px] font-black mb-1 leading-3.5" numberOfLines={2}>
                         {item.title}
                       </AppText>
                       
-                      <AppText className="text-blue-600 text-[9px] font-bold">
+                      <AppText className="text-blue-600 text-[8px] font-bold">
                         Tap to download
                       </AppText>
                     </TouchableOpacity>
