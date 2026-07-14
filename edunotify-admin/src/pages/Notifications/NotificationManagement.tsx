@@ -356,7 +356,6 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                 <th>Details</th>
                 <th>Category</th>
                 <th>Target</th>
-                <th>Attachment</th>
                 <th>Date & Time</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -365,13 +364,13 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
             <tbody>
               {isQueryLoading ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                     <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--primary)' }} />
                   </td>
                 </tr>
               ) : currentNotices.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
                     No announcements found.
                   </td>
                 </tr>
@@ -432,69 +431,6 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                           <span className="badge badge-purple">Student: {n.studentId}</span>
                           <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', paddingLeft: '4px' }}>Class: {n.classId}</span>
                         </div>
-                      )}
-                    </td>
-                    <td>
-                      {n.attachmentUrl ? (
-                        (() => {
-                          const isPdf = n.attachmentType === 'application/pdf';
-                          const isDoc = n.attachmentType === 'application/msword' ||
-                                        n.attachmentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-                          const isImage = n.attachmentType?.startsWith('image/');
-
-                          if (isPdf || isDoc) {
-                            return (
-                              <a
-                                href={n.attachmentUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-                              >
-                                <span style={{
-                                  display: 'inline-flex', alignItems: 'center', gap: '5px',
-                                  backgroundColor: isPdf ? '#FEE2E2' : '#DBEAFE',
-                                  color: isPdf ? '#DC2626' : '#1D4ED8',
-                                  padding: '3px 8px', borderRadius: '6px',
-                                  fontSize: '11px', fontWeight: 700
-                                }}>
-                                  <Paperclip size={12} />
-                                  {isPdf ? 'PDF' : 'DOC'}
-                                </span>
-                              </a>
-                            );
-                          }
-
-                          if (isImage) {
-                            return (
-                              <a href={n.attachmentUrl} target="_blank" rel="noreferrer">
-                                <img
-                                  src={n.attachmentUrl}
-                                  alt="attachment"
-                                  style={{
-                                    width: '48px', height: '36px',
-                                    objectFit: 'cover', borderRadius: '6px',
-                                    border: '1px solid var(--border-color)'
-                                  }}
-                                />
-                              </a>
-                            );
-                          }
-
-                          // Fallback for unknown types
-                          return (
-                            <a
-                              href={n.attachmentUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}
-                            >
-                              <Paperclip size={14} />
-                              <span>View File</span>
-                            </a>
-                          );
-                        })()
-                      ) : (
-                        <span style={{ color: 'var(--text-tertiary)' }}>None</span>
                       )}
                     </td>
                     <td>
