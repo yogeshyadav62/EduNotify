@@ -73,42 +73,74 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveT
   return (
     <div className="dashboard-view">
       <div className="stats-grid">
-        <div className="stat-card" onClick={() => setActiveTab('classes')} style={{ cursor: 'pointer' }}>
+        <div 
+          className="stat-card" 
+          onClick={() => setActiveTab('classes')} 
+          style={{ 
+            cursor: 'pointer', 
+            backgroundColor: 'var(--primary-light)', 
+            borderColor: 'rgba(37, 99, 235, 0.2)' 
+          }}
+        >
           <div className="stat-info">
-            <span className="stat-label">Total Classes</span>
-            <span className="stat-value">{totalClasses}</span>
+            <span className="stat-label" style={{ color: 'var(--text-secondary)' }}>Total Classes</span>
+            <span className="stat-value" style={{ color: 'var(--primary)' }}>{totalClasses}</span>
           </div>
-          <div className="stat-icon" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'var(--primary)', color: '#ffffff' }}>
             <GraduationCap size={24} />
           </div>
         </div>
 
-        <div className="stat-card" onClick={() => setActiveTab('students')} style={{ cursor: 'pointer' }}>
+        <div 
+          className="stat-card" 
+          onClick={() => setActiveTab('students')} 
+          style={{ 
+            cursor: 'pointer', 
+            backgroundColor: 'var(--accent-light)', 
+            borderColor: 'rgba(139, 92, 246, 0.2)' 
+          }}
+        >
           <div className="stat-info">
-            <span className="stat-label">Total Students</span>
-            <span className="stat-value">{totalStudents}</span>
+            <span className="stat-label" style={{ color: 'var(--text-secondary)' }}>Total Students</span>
+            <span className="stat-value" style={{ color: 'var(--accent)' }}>{totalStudents}</span>
           </div>
-          <div className="stat-icon" style={{ backgroundColor: 'var(--accent-light)', color: 'var(--accent)' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'var(--accent)', color: '#ffffff' }}>
             <Users size={24} />
           </div>
         </div>
 
-        <div className="stat-card" onClick={() => setActiveTab('notifications')} style={{ cursor: 'pointer' }}>
+        <div 
+          className="stat-card" 
+          onClick={() => setActiveTab('notifications')} 
+          style={{ 
+            cursor: 'pointer', 
+            backgroundColor: 'var(--success-light)', 
+            borderColor: 'rgba(16, 185, 129, 0.2)' 
+          }}
+        >
           <div className="stat-info">
-            <span className="stat-label">Announcements</span>
-            <span className="stat-value">{totalNotices}</span>
+            <span className="stat-label" style={{ color: 'var(--text-secondary)' }}>Announcements</span>
+            <span className="stat-value" style={{ color: 'var(--success)' }}>{totalNotices}</span>
           </div>
-          <div className="stat-icon" style={{ backgroundColor: 'var(--success-light)', color: 'var(--success)' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'var(--success)', color: '#ffffff' }}>
             <Megaphone size={24} />
           </div>
         </div>
 
-        <div className="stat-card" onClick={() => setActiveTab('notifications')} style={{ cursor: 'pointer' }}>
+        <div 
+          className="stat-card" 
+          onClick={() => setActiveTab('notifications')} 
+          style={{ 
+            cursor: 'pointer', 
+            backgroundColor: 'var(--warning-light)', 
+            borderColor: 'rgba(245, 158, 11, 0.2)' 
+          }}
+        >
           <div className="stat-info">
-            <span className="stat-label">Scheduled / Drafts</span>
-            <span className="stat-value">{scheduledNotices}</span>
+            <span className="stat-label" style={{ color: 'var(--text-secondary)' }}>Scheduled / Drafts</span>
+            <span className="stat-value" style={{ color: 'var(--warning)' }}>{scheduledNotices}</span>
           </div>
-          <div className="stat-icon" style={{ backgroundColor: 'var(--warning-light)', color: 'var(--warning)' }}>
+          <div className="stat-icon" style={{ backgroundColor: 'var(--warning)', color: '#ffffff' }}>
             <Clock size={24} />
           </div>
         </div>
