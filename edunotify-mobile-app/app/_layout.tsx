@@ -52,10 +52,6 @@ function RootLayoutNav() {
   const toast = useAppSelector(state => state.ui.toast);
   const { user, isAuthenticated } = useAppSelector(state => state.auth);
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
   // Real-time Socket Connection management
   useEffect(() => {
     if (isAuthenticated && user && user.classId && user.studentId) {
@@ -155,6 +151,10 @@ function RootLayoutNav() {
       return () => clearTimeout(timer);
     }
   }, [toast?.visible, dispatch]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const getToastBg = () => {
     switch (toast?.type) {
