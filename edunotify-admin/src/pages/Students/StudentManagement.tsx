@@ -224,6 +224,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ showToast 
           <table className="data-table">
             <thead>
               <tr>
+                <th style={{ width: '60px' }}>S.No</th>
                 <th>Student ID</th>
                 <th>Student Name</th>
                 <th>Assigned Class</th>
@@ -235,43 +236,47 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ showToast 
             <tbody>
               {isLoadingStudents ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                     <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--primary)' }} />
                   </td>
                 </tr>
               ) : currentStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
                     No students found.
                   </td>
                 </tr>
               ) : (
-                currentStudents.map((s) => (
-                  <tr key={s.studentId}>
-                    <td>
-                      <span className="badge badge-purple">{s.studentId}</span>
-                    </td>
-                    <td style={{ fontWeight: 600, textTransform: 'capitalize' }}>{s.name}</td>
-                    <td>
-                      <span className="badge badge-blue" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        <GraduationCap size={12} />
-                        {s.classId}
-                      </span>
-                    </td>
-                    <td>{s.email || '-'}</td>
-                    <td>{s.mobile || '-'}</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button className="btn-icon" onClick={() => openEditModal(s)} title="Edit Student">
-                          <Edit2 size={16} />
-                        </button>
-                        <button className="btn-icon btn-icon-danger" onClick={() => handleDelete(s.studentId)} title="Delete Student">
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                currentStudents.map((s, index) => {
+                  const serialNumber = indexOfFirstItem + index + 1;
+                  return (
+                    <tr key={s.studentId}>
+                      <td style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{serialNumber}</td>
+                      <td>
+                        <span className="badge badge-purple">{s.studentId}</span>
+                      </td>
+                      <td style={{ fontWeight: 600, textTransform: 'capitalize' }}>{s.name}</td>
+                      <td>
+                        <span className="badge badge-blue" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <GraduationCap size={12} />
+                          {s.classId}
+                        </span>
+                      </td>
+                      <td>{s.email || '-'}</td>
+                      <td>{s.mobile || '-'}</td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button className="btn-icon" onClick={() => openEditModal(s)} title="Edit Student">
+                            <Edit2 size={16} />
+                          </button>
+                          <button className="btn-icon btn-icon-danger" onClick={() => handleDelete(s.studentId)} title="Delete Student">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

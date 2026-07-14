@@ -139,6 +139,7 @@ export const ClassManagement: React.FC<ClassManagementProps> = ({ showToast }) =
           <table className="data-table">
             <thead>
               <tr>
+                <th style={{ width: '60px' }}>S.No</th>
                 <th>Class ID</th>
                 <th>Class Name</th>
                 <th>Actions</th>
@@ -147,19 +148,20 @@ export const ClassManagement: React.FC<ClassManagementProps> = ({ showToast }) =
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={3} style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '40px' }}>
                     <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--primary)' }} />
                   </td>
                 </tr>
               ) : filteredClasses.length === 0 ? (
                 <tr>
-                  <td colSpan={3} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
+                  <td colSpan={4} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
                     No classes found. Add a class to get started!
                   </td>
                 </tr>
               ) : (
-                filteredClasses.map((c) => (
+                filteredClasses.map((c, index) => (
                   <tr key={c.id}>
+                    <td style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{index + 1}</td>
                     <td>
                       <span className="badge badge-blue">{c.id}</span>
                     </td>
