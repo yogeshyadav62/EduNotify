@@ -35,7 +35,8 @@
         {
           "image": "./assets/images/logo.png",
           "backgroundColor": "#ffffff",
-          "resizeMode": "contain"
+          "resizeMode": "contain",
+          "imageWidth": 250
         }
       ]
     ]
