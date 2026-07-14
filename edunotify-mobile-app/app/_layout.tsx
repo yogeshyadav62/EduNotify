@@ -16,8 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from '../src/theme/colors';
 import PushNotificationService from '../src/services/pushNotificationService';
 import { api } from '../src/services/api';
+import { useFonts } from 'expo-font';
 import { 
-  useFonts,
   Outfit_300Light,
   Outfit_400Regular,
   Outfit_500Medium,
