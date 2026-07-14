@@ -107,11 +107,13 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     limit: number;
   }
 
-  const { data: notifData, isLoading: isLoadingNotifications } = useQuery<PaginatedNotifications>({
+  const { data: notifData, isLoading: isLoadingNotifications, isFetching: isFetchingNotifications } = useQuery<PaginatedNotifications>({
     queryKey: ['notifications', currentPage, search, categoryFilter, statusFilter],
     queryFn: () => getData<PaginatedNotifications>(ROUTES.notifications, notifQueryParams),
     placeholderData: (prev) => prev, // Keep old data while fetching new page
   });
+
+  const isQueryLoading = isLoadingNotifications || isFetchingNotifications;
 
   const notifications = notifData?.notifications ?? [];
   const totalPages = notifData?.totalPages ?? 1;
@@ -339,7 +341,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               </tr>
             </thead>
             <tbody>
-              {isLoadingNotifications ? (
+              {isQueryLoading ? (
                 <tr>
                   <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
                     <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--primary)' }} />
@@ -539,7 +541,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
           <div className="pagination-buttons" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <button
               className="btn btn-secondary"
-              disabled={currentPage <= 1 || isLoadingNotifications}
+              disabled={currentPage <= 1 || isQueryLoading}
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               style={{ padding: '6px 10px', display: 'flex', alignItems: 'center', gap: '4px' }}
             >
@@ -560,6 +562,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                   <button
                     key={p}
                     className={`btn ${p === currentPage ? 'btn-primary' : 'btn-secondary'}`}
+                    disabled={isQueryLoading}
                     onClick={() => setCurrentPage(p as number)}
                     style={{ padding: '6px 10px', minWidth: '36px' }}
                   >
@@ -569,7 +572,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               )}
             <button
               className="btn btn-secondary"
-              disabled={currentPage >= totalPages || isLoadingNotifications}
+              disabled={currentPage >= totalPages || isQueryLoading}
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               style={{ padding: '6px 10px', display: 'flex', alignItems: 'center', gap: '4px' }}
             >
