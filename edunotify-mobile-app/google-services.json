@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369615587663",
+    "project_id": "edunotify-1",
+    "storage_bucket": "edunotify-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369615587663:android:545aa027952101e91b9d3a",
+        "android_client_info": {
+          "package_name": "com.artikin.EduNotify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrK7Edg-hAqGJx2ufGKArTkzUlLcHCFvE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

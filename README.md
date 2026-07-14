@@ -1,100 +1,83 @@
-# EduNotify
+# EduNotify - Educational Notification System
 
-EduNotify is a modern, premium mobile notification system for educational institutions (schools, colleges, universities). It allows students, parents, and educators to view and post real-time academic reminders, transport alerts, fee notifications, and event details.
-
-## 🚀 Features
-
-- **Multi-Role Authentication**: Log in as a **Student**, **Parent**, or **Educator**.
-- **Real-Time Notification Feed**: View notices categorized by *Academic*, *Fees*, *Events*, *Transport*, or *General*.
-- **Quick Filters & Search**: Dynamically filter announcements using category chips and instant text search.
-- **Announcement Detail Modal**: Expand notifications to review details, event dates, due amounts, and download PDF or image attachments.
-- **Educator Broadcast Portal**: Educators (teachers) can post announcements directly in the app, which instantly update the notification feed using Redux state synchronization.
-- **Global Alert System**: Custom slide-down Toast banners for action confirmations (e.g. logging out, publishing notices).
+EduNotify is a modern, premium multi-platform notification system designed for educational institutions. It facilitates real-time communication between administrators, educators, and students. Administrators can manage classes, students, and post announcements from a central dashboard, while students receive instant, secure notification alerts on their mobile app via WebSockets.
 
 ---
 
-## 🎨 Theme & Styling
+## 📂 Project Architecture
 
-EduNotify is built with a premium design system powered by **NativeWind v4** (Tailwind CSS for React Native) and **React Native Reanimated**:
-
-- **Primary**: `#2563EB` (Blue 600)
-- **Secondary**: `#1D4ED8` (Blue 700)
-- **Background**: `#F8FAFC` (Slate 50)
-- **Card**: `#FFFFFF`
-- **Border**: `#E2E8F0` (Slate 200)
-- **Success**: `#16A34A` (Green 600)
-- **Warning**: `#F59E0B` (Amber 600)
-- **Error**: `#DC2626` (Red 600)
-- **Text**: `#0F172A` (Slate 900)
-- **Sub Text**: `#64748B` (Slate 500)
-
----
-
-## 📂 Project Structure
+The project is structured as a clean, modular workspace divided into three main service directories:
 
 ```
 EduNotify/
-├── app/                      # Expo Router Navigation App Layer
-│   ├── _layout.tsx           # Global Providers & Slide Toast Layout
-│   ├── index.tsx             # Animated Splash / Auth Routing Gate
-│   ├── (auth)/
-│   │   ├── _layout.tsx
-│   │   └── login.tsx         # Sign-in Screen & Dev Quick Logins
-│   ├── (tabs)/
-│   │   ├── _layout.tsx       # Bottom Tab Navigator with Badge
-│   │   ├── home.tsx          # Analytics Stats & Category Overview
-│   │   ├── notifications.tsx # Notices Feed, Details Sheet & Teacher FAB
-│   │   └── profile.tsx       # Preferences settings & Logout button
-│   └── +not-found.tsx        # 404 Fallback
-│
-├── src/                      # Core Codebase
-│   ├── components/           # Reusable Component Library
-│   │   ├── common/           # Custom inputs, buttons, loaders, empty state
-│   │   ├── notification/     # Filter chips, cards, headers
-│   │   └── profile/          # Profile widgets
-│   ├── data/                 # Local Mock Database (notifications.json)
-│   ├── hooks/                # Custom React Hooks (useNotifications, useLogin)
-│   ├── lib/                  # Library Configs (queryClient, storage)
-│   ├── redux/                # Redux Toolkit State Management
-│   ├── services/             # API and Notification Synchronization Service
-│   ├── theme/                # Global Design Tokens (colors, spacing, typography)
-│   ├── types/                # TypeScript Interfaces
-│   └── utils/                # Date helpers, formatters, and constants
-│
-├── tailwind.config.js        # Tailwind / NativeWind presets
-├── babel.config.js           # Babel preset settings
-└── metro.config.js           # Metro bundler compilation wrapper
+├── edunotify-backend/      # Express.js REST API & Socket.IO server
+├── edunotify-admin/        # React & Vite admin dashboard web app
+└── edunotify-mobile-app/   # React Native & Expo mobile application
 ```
+
+---
+
+## 🚀 Key Improvements & Features Implemented
+
+1. **Clean Directory Reorganization**: Separated the codebases into clean folders for Frontend Admin, Express Backend, and React Native Mobile App to establish clear boundaries.
+2. **Real-time Sync (Socket.IO)**: Announcements posted in the Admin Dashboard instantly trigger live notifications on students' mobile feeds without requiring page updates.
+3. **Custom Premium UI Modals**: Replaced all native browser `window.confirm()` alerts with custom, high-fidelity Styled Modals for Delete & Logout actions to maintain visual design consistency.
+4. **Enhanced Feedback System**: Repositioned toast notifications to the top-right corner of the Admin Panel screen for better visibility and modern design flow.
+5. **Secure Targeting Guard**: Backend validation prevents accidental deletion of classes containing active students, preserving database integrity.
 
 ---
 
 ## 🛠️ Getting Started
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+Follow these steps to run the complete stack locally:
 
-### 2. Run the Metro Bundler
-Start the project with a clean cache (highly recommended due to NativeWind & Reanimated build config changes):
+### 1. Backend Server Setup
+Go to the backend directory, install packages, set up configurations, and start:
 ```bash
+cd edunotify-backend
+# Make sure to set your MONGODB_URI in .env (we support automatic local fallback SQLite as well if needed)
+npm install
+npm run dev
+```
+*The backend server will run on `http://localhost:4500`.*
+*The first run will seed the default Admin credentials into the database.*
+
+### 2. Admin Dashboard Setup
+Go to the admin web dashboard directory, install packages, and start:
+```bash
+cd edunotify-admin
+npm install
+npm run dev
+```
+*The dashboard will start on `http://localhost:5173` (or the next available port).*
+
+### 3. Mobile App Setup
+Go to the Expo mobile app directory, install packages, and start:
+```bash
+cd edunotify-mobile-app
+npm install
+# Start metro bundler with clean cache
 npx expo start -c
 ```
-
-### 3. Run on Emulators
-- **Android**: Press `a` in the terminal or run `npx expo start --android`
-- **iOS**: Press `i` in the terminal or run `npx expo start --ios`
+*Press `a` for Android Emulator or `i` for iOS Simulator.*
+*(Note: If testing on physical devices, change `BASE_URL` in `src/utils/Routes.ts` to your machine's local wireless network IP, e.g. `http://192.168.1.15:4500`)*
 
 ---
 
-## 🔑 Developer Quick Logins (Testing Credentials)
+## 🔑 Login Testing Credentials
 
-For easy testing and verification of the secure notification filtering logic, you can log in using the following Student IDs and Class IDs:
+### 1. Admin Dashboard Credentials
+Use these to log in to the web panel to manage classes, students, and send notifications:
+* **Username**: `admin`
+* **Password**: `admin123`
 
-| Student Name | Student ID | Class ID (Password) | Visible Notifications (Filtered Output) |
+### 2. Student Mobile App Credentials
+Use these combination of credentials to log in to the mobile feed and test the secure notification filtering logic:
+
+| Student Name | Student ID | Class ID (Password) | Target Filtering Rules |
 | :--- | :--- | :--- | :--- |
-| **Aarav Sharma** | `STU-101` | `CS-202` | Renders all `CS-202` Class Broadcasts + Aarav's Personal notifications. |
-| **Neha Patel** | `STU-102` | `CS-202` | Renders all `CS-202` Class Broadcasts + Neha's Personal notifications (*Aarav's personal data is hidden*). |
-| **Rohan Das** | `STU-301` | `CS-101` | Renders all `CS-101` Class Broadcasts + Rohan's Personal notifications (*all CS-202 data is hidden*). |
+| **Aarav Sharma** | `STU-101` | `CS-101` | Renders `CS-101` broadcasts & Aarav's personal alerts. |
+| **Priyal Patel** | `STU-202` | `CS-202` | Renders `CS-202` broadcasts & Priyal's personal alerts. |
+| **Rohan Joshi** | `STU-303` | `BCA-2A` | Renders `BCA-2A` broadcasts & Rohan's personal alerts. |
 
-*(Note: There is no separate password field. Use the **Student ID** and **Class ID** from the table above to log in.)*
+*(Note: There is no separate password field in the student app. Use the **Student ID** and **Class ID** from the table above to authenticate).*
