@@ -24,12 +24,23 @@
         "backgroundColor": "#ffffff"
       }
     },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#1e40af"
+    },
     "web": {
       "favicon": "./assets/launcher.png"
     },
     "plugins": [
       "expo-router",
       "@react-native-firebase/app",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#1e40af"
+        }
+      ],
       [
         "expo-splash-screen",
         {

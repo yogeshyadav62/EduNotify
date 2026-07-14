@@ -48,7 +48,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [subjectFilter, setSubjectFilter] = useState('');
+  const [classFilter, setClassFilter] = useState('');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
@@ -60,7 +60,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const [description, setDescription] = useState('');
   const [facultyName, setFacultyName] = useState('');
   const [category, setCategory] = useState('general');
-  const [subject, setSubject] = useState('');
+
   
   const [targetType, setTargetType] = useState<'class' | 'student'>('class');
   const [targetClassId, setTargetClassId] = useState('');
@@ -101,7 +101,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   if (search) notifQueryParams.search = search;
   if (categoryFilter) notifQueryParams.category = categoryFilter;
   if (statusFilter) notifQueryParams.status = statusFilter;
-  if (subjectFilter) notifQueryParams.subject = subjectFilter;
+  if (classFilter) notifQueryParams.classId = classFilter;
 
   interface PaginatedNotifications {
     notifications: NotificationData[];
@@ -113,7 +113,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   }
 
   const { data: notifData, isLoading: isLoadingNotifications, isFetching: isFetchingNotifications } = useQuery<PaginatedNotifications>({
-    queryKey: ['notifications', currentPage, search, categoryFilter, statusFilter, subjectFilter],
+    queryKey: ['notifications', currentPage, search, categoryFilter, statusFilter, classFilter],
     queryFn: () => getData<PaginatedNotifications>(ROUTES.notifications, notifQueryParams),
     placeholderData: (prev) => prev, // Keep old data while fetching new page
   });
@@ -179,7 +179,6 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     setDescription('');
     setFacultyName('');
     setCategory('general');
-    setSubject('');
     setTargetType('class');
     setTargetClassId(classes[0]?.id || '');
     setTargetStudentId(students[0]?.studentId || '');
@@ -197,7 +196,6 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     setDescription(n.description);
     setFacultyName(n.facultyName);
     setCategory(n.category);
-    setSubject(n.subject || '');
     setTargetType(n.targetType);
     setTargetClassId(n.classId || classes[0]?.id || '');
     setTargetStudentId(n.studentId || students[0]?.studentId || '');
@@ -250,7 +248,6 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     formData.append('description', description);
     formData.append('facultyName', facultyName);
     formData.append('category', category);
-    formData.append('subject', subject.trim());
     formData.append('targetType', targetType);
     
     if (targetType === 'class') {
@@ -332,13 +329,12 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
 
             <select
               className="select-filter"
-              value={subjectFilter}
-              onChange={(e) => { setSubjectFilter(e.target.value); setCurrentPage(1); }}
-              style={{ textTransform: 'capitalize' }}
+              value={classFilter}
+              onChange={(e) => { setClassFilter(e.target.value); setCurrentPage(1); }}
             >
-              <option value="">All Subjects</option>
-              {uniqueSubjects.map((sub: string) => (
-                <option key={sub} value={sub}>{sub}</option>
+              <option value="">All Classes</option>
+              {classes.map((cls) => (
+                <option key={cls.id} value={cls.id}>{cls.name}</option>
               ))}
             </select>
 
@@ -408,7 +404,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                         {n.description}
                       </div>
                       <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px', textTransform: 'capitalize' }}>
-                        Faculty: {n.facultyName}{n.subject ? ` | Subject: ${n.subject}` : ''}
+                        Faculty: {n.facultyName}
                       </div>
                     </td>
                     <td>
@@ -614,18 +610,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="subject">Subject (Optional)</label>
-                  <input
-                    id="subject"
-                    type="text"
-                    className="form-control"
-                    placeholder="e.g. Mathematics, Physics, CSE (leave empty if general)"
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    disabled={loading}
-                  />
-                </div>
+
 
                 <div className="form-row">
                   <div className="form-group">
@@ -881,14 +866,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                     {viewNotice.targetType === 'class' ? `Class Wide (${viewNotice.classId})` : `Specific Student (${viewNotice.studentId})`}
                   </p>
                 </div>
-                {viewNotice.subject && (
-                  <div>
-                    <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Subject</h5>
-                    <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
-                      {viewNotice.subject}
-                    </p>
-                  </div>
-                )}
+
                 <div>
                   <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Published By</h5>
                   <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'capitalize' }}>
