@@ -67,10 +67,10 @@ export default function LoginScreen() {
           className="px-6"
         >
           {/* Logo Header (Top Center) */}
-          <View className="items-center mt-20">
+          <View className="items-center mt-12">
             <Image
               source={require('../../assets/images/logo.png')}
-              className="w-48 h-48"
+              className="w-64 h-64"
               resizeMode="contain"
             />
           </View>
