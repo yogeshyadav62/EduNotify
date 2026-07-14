@@ -60,10 +60,10 @@ export const useNotifications = () => {
   }, [isLoading, dispatch]);
 
   useEffect(() => {
-    if (pagedNotifications.length > 0) {
+    if (data) {
       dispatch(setNotificationsSuccess(pagedNotifications));
     }
-  }, [pagedNotifications, dispatch]);
+  }, [pagedNotifications, data, dispatch]);
 
   useEffect(() => {
     if (isError) {
@@ -76,7 +76,7 @@ export const useNotifications = () => {
   // defensive check to ensure no cross-student data leaks in.
   const studentNotifications = useMemo(
     () =>
-      pagedNotifications.filter(item => {
+      reduxNotifications.filter(item => {
         if (!user || !user.classId || !user.studentId || !item || !item.classId) return false;
         const isSameClass = item.classId.toUpperCase() === user.classId.toUpperCase();
         const isClassWide = item.studentId === null;
@@ -85,7 +85,7 @@ export const useNotifications = () => {
           item.studentId.toUpperCase() === user.studentId.toUpperCase();
         return isSameClass && (isClassWide || isPersonalToMe);
       }),
-    [pagedNotifications, user]
+    [reduxNotifications, user]
   );
 
   // ── Category filter (All / Class Broadcasts / Personal) ─────────────────────
