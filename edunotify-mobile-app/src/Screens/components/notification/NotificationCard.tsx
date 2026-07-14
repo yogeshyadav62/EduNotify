@@ -87,6 +87,48 @@ export const NotificationCard = ({
             >
               {notification.description}
             </AppText>
+
+            {/* Compact Attachment Preview Card (Uniform Size) */}
+            {notification.attachmentUrl && (
+              <View 
+                style={{ height: 40 }}
+                className="mt-1.5 flex-row items-center bg-slate-50 border border-slate-100 rounded-xl px-2"
+              >
+                {notification.attachmentType?.startsWith('image/') ? (
+                  <>
+                    <Image
+                      source={{ uri: notification.attachmentUrl }}
+                      className="w-6 h-6 rounded-lg bg-slate-100 mr-2 border border-slate-200"
+                      resizeMode="cover"
+                    />
+                    <View className="flex-1">
+                      <AppText className="text-slate-700 text-[9px] font-extrabold" numberOfLines={1}>
+                        Image Attachment
+                      </AppText>
+                      <AppText className="text-slate-400 text-[7px] font-bold">
+                        Tap to view image
+                      </AppText>
+                    </View>
+                    <Ionicons name="image-outline" size={12} color="#64748B" />
+                  </>
+                ) : (
+                  <>
+                    <View className="w-6 h-6 rounded-lg bg-red-50 items-center justify-center mr-2 border border-red-100">
+                      <Ionicons name="document-text" size={12} color="#EF4444" />
+                    </View>
+                    <View className="flex-1">
+                      <AppText className="text-slate-700 text-[9px] font-extrabold" numberOfLines={1}>
+                        {notification.attachmentType === 'application/pdf' ? 'PDF Document' : 'Document Attachment'}
+                      </AppText>
+                      <AppText className="text-slate-400 text-[7px] font-bold">
+                        Tap to open file
+                      </AppText>
+                    </View>
+                    <Ionicons name="document-outline" size={12} color="#64748B" />
+                  </>
+                )}
+              </View>
+            )}
           </View>
 
           {/* Bottom Row: Faculty & Time */}
