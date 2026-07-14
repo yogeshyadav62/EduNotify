@@ -13,6 +13,7 @@ const NotificationSchema = new mongoose.Schema({
   dateTime: { type: Date, default: Date.now },
   attachmentUrl: { type: String, default: null },
   attachmentType: { type: String, default: null }, // MIME type: e.g. 'image/jpeg', 'application/pdf'
+  subject: { type: String, default: null },
   isDelivered: { type: Boolean, default: false },
   isSeen: { type: Boolean, default: false },
   deliveredAt: { type: Date, default: null },

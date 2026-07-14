@@ -215,7 +215,7 @@ export const deleteStudent = async (req, res) => {
 
 // --- NOTIFICATION CRUD ---
 export const getAllNotifications = async (req, res) => {
-  const { page, limit = 10, search, category, status } = req.query;
+  const { page, limit = 10, search, category, status, subject } = req.query;
 
   try {
     const query = {};
@@ -225,6 +225,9 @@ export const getAllNotifications = async (req, res) => {
     if (status) {
       query.status = status;
     }
+    if (subject) {
+      query.subject = subject.trim();
+    }
     if (search) {
       const searchRegex = new RegExp(search.trim(), 'i');
       query.$or = [
@@ -232,12 +235,14 @@ export const getAllNotifications = async (req, res) => {
         { description: searchRegex },
         { facultyName: searchRegex },
         { classId: searchRegex },
-        { studentId: searchRegex }
+        { studentId: searchRegex },
+        { subject: searchRegex }
       ];
     }
 
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
+    const uniqueSubjects = await Notification.distinct('subject');
 
     if (pageNum) {
       const skip = (pageNum - 1) * limitNum;
@@ -252,7 +257,8 @@ export const getAllNotifications = async (req, res) => {
         currentPage: pageNum,
         totalPages: Math.ceil(totalCount / limitNum),
         totalCount,
-        limit: limitNum
+        limit: limitNum,
+        uniqueSubjects: uniqueSubjects.filter(Boolean)
       });
     } else {
       const notifications = await Notification.find(query).sort({ dateTime: -1 });
@@ -275,7 +281,8 @@ export const createNotification = async (req, res) => {
     studentId,
     status,
     scheduledFor,
-    attachmentUrl
+    attachmentUrl,
+    subject
   } = req.body;
 
   if (!title || !description || !facultyName || !category || !targetType) {
@@ -324,6 +331,7 @@ export const createNotification = async (req, res) => {
       dateTime: scheduledFor ? new Date(scheduledFor) : new Date(),
       attachmentUrl: finalAttachmentUrl,
       attachmentType: finalAttachmentType,
+      subject: subject ? subject.trim() : null
     });
 
     // Emit real-time update immediately if it's published and not scheduled
@@ -351,7 +359,8 @@ export const updateNotification = async (req, res) => {
     studentId,
     status,
     scheduledFor,
-    attachmentUrl
+    attachmentUrl,
+    subject
   } = req.body;
 
   try {
@@ -399,6 +408,7 @@ export const updateNotification = async (req, res) => {
       scheduledFor: scheduledFor !== undefined ? (scheduledFor ? new Date(scheduledFor) : null) : notification.scheduledFor,
       attachmentUrl: finalAttachmentUrl,
       attachmentType: finalAttachmentType,
+      subject: subject !== undefined ? (subject ? subject.trim() : null) : notification.subject
     }, { new: true });
 
     // Emit if newly published
