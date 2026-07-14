@@ -30,17 +30,11 @@ export const useLogin = () => {
       return;
     }
 
-    // Pattern validation (Student ID format: STU-XXXX, Class ID format: CS-XXX)
+    // Pattern validation (Student ID format: STU-XXXX)
     const stuIdRegex = /^STU-\d+$/i;
-    const classIdRegex = /^[A-Z]{2,4}-\d{3}$/i;
 
     if (!stuIdRegex.test(id)) {
       dispatch(showToast({ message: 'Student ID must follow the pattern STU-101', type: 'error' }));
-      return;
-    }
-
-    if (!classIdRegex.test(cls)) {
-      dispatch(showToast({ message: 'Class ID must follow the pattern CS-202', type: 'error' }));
       return;
     }
 
