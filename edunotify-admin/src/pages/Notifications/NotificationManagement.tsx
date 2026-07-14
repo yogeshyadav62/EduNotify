@@ -331,6 +331,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
           <table className="data-table">
             <thead>
               <tr>
+                <th style={{ width: '60px' }}>S.No</th>
                 <th>Details</th>
                 <th>Category</th>
                 <th>Target</th>
@@ -343,20 +344,23 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
             <tbody>
               {isQueryLoading ? (
                 <tr>
-                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '40px' }}>
                     <Loader2 size={24} className="animate-spin" style={{ margin: '0 auto', color: 'var(--primary)' }} />
                   </td>
                 </tr>
               ) : currentNotices.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
                     No announcements found.
                   </td>
                 </tr>
               ) : (
-                currentNotices.map((n) => (
-                  <tr key={n.id}>
-                    <td style={{ maxWidth: '250px' }}>
+                currentNotices.map((n, index) => {
+                  const serialNumber = (currentPage - 1) * ITEMS_PER_PAGE + index + 1;
+                  return (
+                    <tr key={n.id}>
+                      <td style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>{serialNumber}</td>
+                      <td style={{ maxWidth: '250px' }}>
                       <div 
                         style={{ 
                           fontWeight: 600, 
@@ -525,7 +529,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                       </div>
                     </td>
                   </tr>
-                ))
+                ); })
               )}
             </tbody>
           </table>
