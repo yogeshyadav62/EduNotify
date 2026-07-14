@@ -16,6 +16,15 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from '../src/theme/colors';
 import PushNotificationService from '../src/services/pushNotificationService';
 import { api } from '../src/services/api';
+import { 
+  useFonts,
+  Outfit_300Light,
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+  Outfit_800ExtraBold 
+} from '@expo-google-fonts/outfit';
 
 export default function RootLayout() {
   return (
@@ -30,9 +39,22 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const [fontsLoaded] = useFonts({
+    Outfit_300Light,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    Outfit_800ExtraBold,
+  });
+
   const dispatch = useAppDispatch();
   const toast = useAppSelector(state => state.ui.toast);
   const { user, isAuthenticated } = useAppSelector(state => state.auth);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   // Real-time Socket Connection management
   useEffect(() => {

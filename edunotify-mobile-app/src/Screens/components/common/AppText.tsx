@@ -51,8 +51,27 @@ export const AppText = ({ children, variant, className = '', ...props }: AppText
     .replace(/\s+/g, ' ')
     .trim();
 
+  // Determine Outfit font family weight dynamically
+  let fontFamily = 'Outfit_400Regular';
+
+  if (className.includes('font-black') || className.includes('font-extrabold')) {
+    fontFamily = 'Outfit_800ExtraBold';
+  } else if (className.includes('font-bold') || variant === 'bold' || variant === 'h1') {
+    fontFamily = 'Outfit_700Bold';
+  } else if (className.includes('font-semibold') || variant === 'h2') {
+    fontFamily = 'Outfit_600SemiBold';
+  } else if (className.includes('font-medium') || variant === 'medium' || variant === 'h3') {
+    fontFamily = 'Outfit_500Medium';
+  } else if (className.includes('font-light')) {
+    fontFamily = 'Outfit_300Light';
+  }
+
   return (
-    <Text className={combinedClass} {...props}>
+    <Text 
+      className={combinedClass} 
+      style={[{ fontFamily }, props.style]} 
+      {...props}
+    >
       {children}
     </Text>
   );
