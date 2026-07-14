@@ -109,7 +109,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     totalPages: number;
     totalCount: number;
     limit: number;
-    uniqueSubjects?: string[];
+
   }
 
   const { data: notifData, isLoading: isLoadingNotifications, isFetching: isFetchingNotifications } = useQuery<PaginatedNotifications>({
@@ -123,7 +123,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const notifications = notifData?.notifications ?? [];
   const totalPages = notifData?.totalPages ?? 1;
   const totalCount = notifData?.totalCount ?? 0;
-  const uniqueSubjects = notifData?.uniqueSubjects ?? [];
+
 
   const { data: classes = [] } = useQuery<ClassData[]>({
     queryKey: ['classes'],
