@@ -76,11 +76,11 @@ export default function HomeScreen() {
       </View>
 
       {/* Profile summary card inside header */}
-      <View className="px-5 pb-6 bg-[#0B66EF]">
-        <AppText className="text-white font-black" style={{ fontSize: 28, lineHeight: 44, textTransform: 'capitalize' }}>
+      <View className="px-5 pb-4 bg-[#0B66EF]">
+        <AppText className="text-white font-black" style={{ fontSize: 20, lineHeight: 28, textTransform: 'capitalize' }}>
           Hello, {user?.name?.split(' ')[0] || 'Student'} 👋
         </AppText>
-        <AppText className="text-white/80 text-sm font-semibold mt-1">
+        <AppText className="text-white/80 text-[11px] font-semibold mt-1">
           Class: {user?.classId || 'N/A'}  |  Student: {user?.studentId || 'N/A'}
         </AppText>
       </View>
@@ -151,11 +151,11 @@ export default function HomeScreen() {
           {/* RECENT NOTICES SECTION */}
           <View className="mb-4">
             <View className="flex-row justify-between items-center px-5 mb-2.5">
-              <AppText className="text-slate-800 text-base font-black">
+              <AppText className="text-slate-800 text-sm font-black">
                 Recent Announcements
               </AppText>
               <TouchableOpacity onPress={() => router.push('/(tabs)/notifications')}>
-                <AppText className="text-[#0B66EF] text-xs font-bold">
+                <AppText className="text-[#0B66EF] text-[11px] font-bold">
                   View All
                 </AppText>
               </TouchableOpacity>
@@ -188,7 +188,7 @@ export default function HomeScreen() {
           {noticesWithAttachments.length > 0 && (
             <View className="mb-4">
               <View className="px-5 mb-2.5">
-                <AppText className="text-slate-800 text-base font-black">
+                <AppText className="text-slate-800 text-sm font-black">
                   Important Attachments
                 </AppText>
               </View>

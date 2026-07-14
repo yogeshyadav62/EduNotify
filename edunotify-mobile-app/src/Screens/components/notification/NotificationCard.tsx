@@ -69,7 +69,7 @@ export const NotificationCard = ({
           {/* Top Row: Category Label */}
           <View className="flex-row justify-between items-center mb-0.5">
             <AppText
-              className={`text-[8px] font-black uppercase tracking-widest ${isPersonal ? 'text-blue-600' : 'text-orange-500'
+              className={`text-[7px] font-black uppercase tracking-widest ${isPersonal ? 'text-blue-600' : 'text-orange-500'
                 }`}
             >
               {isPersonal ? 'PERSONAL' : 'BROADCAST'}
@@ -78,12 +78,12 @@ export const NotificationCard = ({
 
           {/* Middle Row: Title & Description */}
           <View className="mb-1.5">
-            <AppText className="text-slate-800 text-xs font-black mb-0.5 leading-4" numberOfLines={1}>
+            <AppText className="text-slate-800 text-[11px] font-bold mb-0.5 leading-3.5" numberOfLines={1}>
               {notification.title}
             </AppText>
             <AppText
               numberOfLines={1}
-              className="text-slate-500 text-[10px] leading-3.5"
+              className="text-slate-500 text-[9px] leading-3"
             >
               {notification.description}
             </AppText>
@@ -102,13 +102,13 @@ export const NotificationCard = ({
                   <Ionicons name="person" size={8} color={colors.slate[400]} />
                 </View>
               )}
-              <AppText className="text-[9px] font-bold text-slate-500">
+              <AppText className="text-[8px] font-bold text-slate-500">
                 {notification.facultyName}
               </AppText>
             </View>
 
             <View className="flex-row items-center">
-              <AppText className="text-[8px] text-slate-400 font-bold mr-1">
+              <AppText className="text-[7.5px] text-slate-400 font-bold mr-1">
                 {formatRelativeTime(notification.dateTime)}
               </AppText>
               <Ionicons
