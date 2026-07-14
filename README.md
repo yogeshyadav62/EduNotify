@@ -81,3 +81,102 @@ Use these combination of credentials to log in to the mobile feed and test the s
 | **Rohan Joshi** | `STU-303` | `BCA-2A` | Renders `BCA-2A` broadcasts & Rohan's personal alerts. |
 
 *(Note: There is no separate password field in the student app. Use the **Student ID** and **Class ID** from the table above to authenticate).*
+
+---
+
+## 🗄️ Database Schema Description
+
+The system defines four main database models:
+
+### 1. Class Schema (`Class`)
+* **`id` / `_id`** (`String`, Required): Unique ID representing the class code (e.g., `CS-202`).
+* **`name`** (`String`, Required): Full human-readable name of the class batch.
+
+### 2. Student Schema (`Student`)
+* **`studentId` / `_id`** (`String`, Required): Unique ID representing the student (e.g., `STU-101`).
+* **`name`** (`String`, Required): Full name of the student.
+* **`classId`** (`String`, Ref: `'Class'`, Required): Linked Class ID code.
+* **`email`** (`String`, Optional): Optional email address.
+* **`mobile`** (`String`, Optional): Optional mobile number.
+* **`fcmToken`** (`String`, Optional): Token for Firebase Cloud Messaging.
+* **`profilePicUrl`** (`String`, Optional): Cloudinary avatar image URL.
+
+### 3. Notification Schema (`Notification`)
+* **`title`** (`String`, Required): Title of notice (Automatically capitalized).
+* **`description`** (`String`, Required): Description paragraph of notice (Automatically capitalized).
+* **`facultyName`** (`String`, Required): Name of posting faculty member.
+* **`category`** (`String`, Required): Notice category: `academic`, `fees`, `events`, `transport`.
+* **`targetType`** (`String`, Required): Notice target audience: `class` or `student`.
+* **`classId`** (`String`, Ref: `'Class'`, Optional): Filter target class ID.
+* **`studentId`** (`String`, Ref: `'Student'`, Optional): Specific student target receiver ID.
+* **`status`** (`String`, Default: `'published'`): Delivery status: `draft` or `published`.
+* **`scheduledFor`** (`Date`, Optional): Scheduled timestamp for future automated dispatch.
+* **`dateTime`** (`Date`, Default: Now): DateTime notice was published.
+* **`attachmentUrl`** (`String`, Optional): Uploaded image/file URL.
+* **`attachmentType`** (`String`, Optional): MIME file type of attachment (e.g. `image/jpeg` or `application/pdf`).
+* **`isDelivered`** (`Boolean`, Default: `false`): Sync status indicator.
+* **`isSeen`** (`Boolean`, Default: `false`): Read/seen indicator.
+
+### 4. Admin Schema (`Admin`)
+* **`username`** (`String`, Required, Unique): Admin dashboard login ID.
+* **`password`** (`String`, Required): Hashed password string.
+* **`name`** (`String`, Required): User profile display name.
+* **`role`** (`String`, Default: `'admin'`): User permission role.
+
+---
+
+## 🔌 Backend API Documentation
+
+### 1. Admin Endpoints (`/api/admin`)
+* **`POST /auth/login`**: Authenticate administrator dashboard and return JWT.
+* **`GET /classes`**: Retrieve list of all classes.
+* **`POST /classes`**: Create a new class database record.
+* **`PUT /classes/:id`**: Modify class details.
+* **`DELETE /classes/:id`**: Securely delete class (fails if active student relationships exist).
+* **`GET /students`**: Retrieve list of all registered students.
+* **`POST /students`**: Register a new student and assign to Class.
+* **`PUT /students/:studentId`**: Edit student profiles.
+* **`DELETE /students/:studentId`**: Deregister a student record.
+* **`GET /notifications`**: Fetch all notice histories.
+* **`POST /notifications`**: Publish or schedule notification (Supports single-file `'attachment'` uploads with image cropping).
+* **`PUT /notifications/:id`**: Update notice fields or reschedule.
+* **`DELETE /notifications/:id`**: Terminate/delete an announcement entry.
+
+### 2. Student App Endpoints (`/api/student`)
+* **`POST /auth/login`**: Validate Student ID & Class ID credentials.
+* **`GET /notifications`**: Fetch secure, target-filtered personal & class broadcast notices.
+* **`PUT /fcm-token`**: Register/update mobile app FCM push token.
+* **`PUT /notifications/:id/delivered`**: Flag notice status as delivered to client device.
+* **`PUT /notifications/:id/seen`**: Mark notice status as Read/Seen.
+* **`GET /profile`**: Retrieve student avatar & credentials.
+* **`PUT /profile`**: Update student profile settings.
+* **`PUT /profile/avatar`**: Upload/change student profile picture.
+
+---
+
+## 🐳 Docker Deployment Setup
+
+You can build and launch the backend service containerized using Docker:
+
+### 1. Build and Run Stack
+In the root directory, spin up the backend service in detached mode:
+```bash
+docker-compose up --build -d
+```
+*The database automatically initializes and runs on port `4500`.*
+
+### 2. View Container Logs
+```bash
+docker logs -f edunotify-backend-service
+```
+
+---
+
+## 🧪 Running Unit Tests
+EduNotify utilizes Node's modern native test runner (`node:test`) for dependency-free, ES module compatible unit testing:
+```bash
+cd edunotify-backend
+npm test
+```
+*Verifies text formatting utilities, regex filters, and student ID constraints successfully.*
+

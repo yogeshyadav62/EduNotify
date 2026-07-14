@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./edunotify-backend
+      dockerfile: Dockerfile
+    container_name: edunotify-backend-service
+    ports:
+      - "4500:4500"
+    environment:
+      - PORT=4500
+      - NODE_ENV=production
+    volumes:
+      - backend-uploads:/app/uploads
+      - backend-db:/app/data
+
+volumes:
+  backend-uploads:
+  backend-db:
