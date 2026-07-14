@@ -764,6 +764,10 @@ body {
   }
 }
 
+.sidebar-close-btn {
+  display: none !important;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
   /* Make dashboard grid stack vertically */
@@ -789,6 +793,10 @@ body {
   
   /* Sidebar toggle button helper classes */
   .menu-btn {
+    display: flex !important;
+  }
+  
+  .sidebar-close-btn {
     display: flex !important;
   }
   

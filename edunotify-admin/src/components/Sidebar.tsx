@@ -28,7 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {onClose && (
           <button 
             onClick={onClose}
-            className="theme-toggle" 
+            className="theme-toggle sidebar-close-btn" 
             style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             id="sidebar-close-btn"
           >
