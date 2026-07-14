@@ -6,7 +6,7 @@ import { DashboardOverview } from './pages/Dashboard/DashboardOverview';
 import { ClassManagement } from './pages/Classes/ClassManagement';
 import { StudentManagement } from './pages/Students/StudentManagement';
 import { NotificationManagement } from './pages/Notifications/NotificationManagement';
-import { Sun, Moon, Info, LogOut } from 'lucide-react';
+import { Sun, Moon, Info, LogOut, Menu } from 'lucide-react';
 import { Login } from './auth/Login/Login';
 
 interface ToastData {
@@ -20,6 +20,7 @@ export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('admin_token'));
   const [adminName, setAdminName] = useState<string>(localStorage.getItem('admin_name') || 'Administrator');
   const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('admin_theme') || 'light');
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -178,15 +179,44 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={triggerLogoutConfirm} adminName={adminName} />
+      {sidebarOpen && (
+        <div 
+          onClick={() => setSidebarOpen(false)} 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.4)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 90
+          }} 
+        />
+      )}
+      
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        onLogout={triggerLogoutConfirm} 
+        adminName={adminName} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <main className="main-content">
         <header className="top-header">
-          <div className="header-title">
-            {activeTab === 'overview' && 'Dashboard Overview'}
-            {activeTab === 'classes' && 'Class Management'}
-            {activeTab === 'students' && 'Student Management'}
-            {activeTab === 'notifications' && 'Notification Logs'}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button 
+              className="theme-toggle menu-btn" 
+              onClick={() => setSidebarOpen(true)}
+              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px' }}
+            >
+              <Menu size={20} />
+            </button>
+            <div className="header-title">
+              {activeTab === 'overview' && 'Dashboard Overview'}
+              {activeTab === 'classes' && 'Class Management'}
+              {activeTab === 'students' && 'Student Management'}
+              {activeTab === 'notifications' && 'Notification Logs'}
+            </div>
           </div>
 
           <div className="header-actions">

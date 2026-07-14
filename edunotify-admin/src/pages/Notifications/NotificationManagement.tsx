@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Search, Edit2, Trash2, X, Calendar, Image, Paperclip, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, X, Calendar, Image, Paperclip, Loader2, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { getData, postData, putData, deleteData } from '../../utils/ApiCall';
 import { ROUTES } from '../../utils/Routes';
 
@@ -69,6 +69,13 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const [currentAttachmentUrl, setCurrentAttachmentUrl] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [noticeToDelete, setNoticeToDelete] = useState('');
+  const [viewNotice, setViewNotice] = useState<NotificationData | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
+  const openViewModal = (notice: NotificationData) => {
+    setViewNotice(notice);
+    setIsViewModalOpen(true);
+  };
 
   // Server-side Pagination (10 per page)
   const [currentPage, setCurrentPage] = useState(1);
@@ -347,9 +354,31 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               ) : (
                 currentNotices.map((n) => (
                   <tr key={n.id}>
-                    <td style={{ maxWidth: '300px' }}>
-                      <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px', textTransform: 'capitalize' }}>{n.title}</div>
-                      <div style={{ fontSize: '13px', color: 'var(--text-secondary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <td style={{ maxWidth: '250px' }}>
+                      <div 
+                        style={{ 
+                          fontWeight: 600, 
+                          fontSize: '15px', 
+                          marginBottom: '4px', 
+                          textTransform: 'capitalize',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }} 
+                        title={n.title}
+                      >
+                        {n.title}
+                      </div>
+                      <div 
+                        style={{ 
+                          fontSize: '13px', 
+                          color: 'var(--text-secondary)',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }} 
+                        title={n.description}
+                      >
                         {n.description}
                       </div>
                       <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px', textTransform: 'capitalize' }}>
@@ -482,6 +511,9 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                     </td>
                     <td>
                       <div style={{ display: 'flex', gap: '8px' }}>
+                        <button className="btn-icon" onClick={() => openViewModal(n)} title="View Notice">
+                          <Eye size={16} />
+                        </button>
                         <button className="btn-icon" onClick={() => openEditModal(n)} title="Edit Notice">
                           <Edit2 size={16} />
                         </button>
@@ -815,6 +847,135 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                   Delete
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* View Details Modal */}
+      {isViewModalOpen && viewNotice && (
+        <div className="modal-backdrop">
+          <div className="modal-content" style={{ maxWidth: '550px' }}>
+            <div className="modal-header">
+              <h3 className="modal-title">Announcement Details</h3>
+              <button className="btn-icon" onClick={() => setIsViewModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '24px' }}>
+              
+              {/* Title & Category Badge */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span className={`badge badge-${
+                    viewNotice.category === 'academic' ? 'purple' :
+                    viewNotice.category === 'fees' ? 'green' :
+                    viewNotice.category === 'events' ? 'yellow' :
+                    viewNotice.category === 'transport' ? 'red' : 'gray'
+                  }`} style={{ fontSize: '12px', padding: '4px 10px' }}>
+                    {viewNotice.category}
+                  </span>
+                  
+                  {viewNotice.status === 'published' ? (
+                    <span className="badge badge-green">Published</span>
+                  ) : (
+                    <span className="badge badge-yellow">Draft / Scheduled</span>
+                  )}
+                </div>
+                <h2 style={{ fontSize: '20px', fontWeight: 700, lineHeight: 1.4, color: 'var(--text-primary)', textTransform: 'capitalize' }}>
+                  {viewNotice.title}
+                </h2>
+              </div>
+
+              {/* Full Description */}
+              <div style={{ borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '16px 0' }}>
+                <h4 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                  Description
+                </h4>
+                <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                  {viewNotice.description}
+                </p>
+              </div>
+
+              {/* Metadata Details Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="form-row">
+                <div>
+                  <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Target Audience</h5>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    {viewNotice.targetType === 'class' ? `Class Wide (${viewNotice.classId})` : `Specific Student (${viewNotice.studentId})`}
+                  </p>
+                </div>
+                <div>
+                  <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Published By</h5>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'capitalize' }}>
+                    Faculty: {viewNotice.facultyName}
+                  </p>
+                </div>
+                <div>
+                  <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Date & Time</h5>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    {new Date(viewNotice.dateTime).toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Delivery Status</h5>
+                  <p style={{ fontSize: '14px', fontWeight: 600 }}>
+                    {viewNotice.isSeen ? (
+                      <span style={{ color: '#2563EB' }}>Seen by student</span>
+                    ) : viewNotice.isDelivered ? (
+                      <span style={{ color: 'var(--text-secondary)' }}>Delivered to device</span>
+                    ) : (
+                      <span style={{ color: 'var(--text-tertiary)' }}>Sent / Published</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Attachment preview if exists */}
+              {viewNotice.attachmentUrl && (
+                <div style={{ backgroundColor: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', padding: '16px', border: '1px solid var(--border-color)' }}>
+                  <h5 style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginBottom: '8px' }}>Attachment</h5>
+                  {viewNotice.attachmentType?.startsWith('image/') ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <img 
+                        src={viewNotice.attachmentUrl} 
+                        alt="attachment preview" 
+                        style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}
+                      />
+                      <a 
+                        href={viewNotice.attachmentUrl} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="btn btn-secondary" 
+                        style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '8px', fontSize: '13px' }}
+                      >
+                        <Eye size={14} /> View Full Image
+                      </a>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <Paperclip size={18} style={{ color: 'var(--primary)' }} />
+                        <span style={{ fontSize: '14px', fontWeight: 600 }}>Document Attachment</span>
+                      </div>
+                      <a 
+                        href={viewNotice.attachmentUrl} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="btn btn-secondary" 
+                        style={{ padding: '6px 12px', fontSize: '13px' }}
+                      >
+                        Open File
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" onClick={() => setIsViewModalOpen(false)}>
+                Close
+              </button>
             </div>
           </div>
         </div>
