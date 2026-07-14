@@ -49,6 +49,10 @@ const notificationSlice = createSlice({
         state.items.unshift(newNotice);
       }
     },
+    removeNotification(state, action: PayloadAction<string>) {
+      const id = action.payload;
+      state.items = state.items.filter(item => item.id !== id);
+    },
     clearNotificationsState(state) {
       state.items = [];
       state.readNotificationIds = [];
@@ -65,6 +69,7 @@ export const {
   markAllAsRead,
   setFilter,
   addNewNotification,
+  removeNotification,
   clearNotificationsState,
 } = notificationSlice.actions;
 

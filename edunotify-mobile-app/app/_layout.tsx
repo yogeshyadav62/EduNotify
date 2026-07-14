@@ -8,7 +8,7 @@ import { store } from '../src/redux/store';
 import { queryClient } from '../src/lib/queryClient';
 import { useAppDispatch, useAppSelector } from '../src/redux/hooks';
 import { hideToast, showToast } from '../src/redux/slices/uiSlice';
-import { addNewNotification } from '../src/redux/slices/notificationSlice';
+import { addNewNotification, removeNotification } from '../src/redux/slices/notificationSlice';
 import socketService from '../src/utils/socketService';
 import AppText from '../src/Screens/components/common/AppText';
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
@@ -52,6 +52,11 @@ function RootLayoutNav() {
           message: `New notice: "${newNotice.title}"`,
           type: 'info'
         }));
+      });
+
+      // Listen for real-time deletions
+      socketService.onDeletedNotification((payload) => {
+        dispatch(removeNotification(payload.id));
       });
     } else {
       socketService.disconnect();

@@ -1,5 +1,5 @@
 import { Notification, Class, Student } from '../models/index.js';
-import { emitNewNotification } from '../loaders/socket.js';
+import { emitNewNotification, emitDeletedNotification } from '../loaders/socket.js';
 import { Op } from 'sequelize';
 
 // Fetch notifications (Filtered for Students, All for Admin)
@@ -215,6 +215,7 @@ export const deleteNotification = async (req, res) => {
     }
 
     await notification.destroy();
+    emitDeletedNotification(notification);
     return res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     console.error('Error deleting notification:', error);
