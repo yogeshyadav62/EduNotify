@@ -4,8 +4,9 @@ import { useAppDispatch } from '../src/redux/hooks';
 import { restoreAuth } from '../src/redux/slices/authSlice';
 import { storage } from '../src/utils/storage';
 import { setAuthToken } from '../src/services/api';
+import * as SplashScreen from 'expo-splash-screen';
 
-export default function SplashScreen() {
+export default function AuthCheckScreen() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -29,6 +30,11 @@ export default function SplashScreen() {
       console.error('Error during splash auth check', e);
       setAuthToken(null);
       router.replace('/(auth)/login');
+    } finally {
+      // Hide native splash screen after navigation starts
+      setTimeout(() => {
+        SplashScreen.hideAsync().catch(() => {});
+      }, 200);
     }
   };
 
