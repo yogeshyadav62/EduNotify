@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, ActivityIndicator, TextInput, RefreshControl, useWindowDimensions, Text } from 'react-native';
+import { View, FlatList, TouchableOpacity, ActivityIndicator, TextInput, RefreshControl, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Screen from '../../components/common/Screen';
@@ -144,7 +144,7 @@ export default function NotificationsScreen() {
               </View>
             ) : hasMore ? (
               <View style={{ padding: 8, alignItems: 'center' }}>
-                <Text style={{ fontSize: 10, color: '#94A3B8', fontWeight: '600' }}>Scroll for more</Text>
+                <AppText style={{ fontSize: 10, color: '#94A3B8' }} className="font-semibold">Scroll for more</AppText>
               </View>
             ) : null
           }
@@ -191,7 +191,7 @@ export default function NotificationsScreen() {
                 borderColor: '#FFFFFF'
               }}
             >
-              <Text 
+              <AppText 
                 className="text-white font-black"
                 style={{
                   textAlign: 'center',
@@ -202,7 +202,7 @@ export default function NotificationsScreen() {
                 }}
               >
                 {unreadCount}
-              </Text>
+              </AppText>
             </View>
           )}
         </TouchableOpacity>
