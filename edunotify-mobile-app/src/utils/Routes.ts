@@ -1,5 +1,5 @@
 // Change this to your computer's local IP (e.g., http://192.168.1.15:4500) if testing on a physical device / emulator
-export const BASE_URL = 'http://10.222.167.132:4500';
+export const BASE_URL = 'https://edunotify-r1pc.onrender.com';
 
 export const ROUTES = Object.freeze({
   LOGIN: '/api/student/auth/login',
