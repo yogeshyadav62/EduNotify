@@ -108,7 +108,7 @@ export const NotificationCard = ({
             </View>
 
             <View className="flex-row items-center">
-              <AppText className="text-[7.5px] text-slate-400 font-bold mr-1">
+              <AppText className="text-[6.5px] text-slate-400 font-bold mr-1">
                 {formatRelativeTime(notification.dateTime)}
               </AppText>
               <Ionicons

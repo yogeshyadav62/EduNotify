@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Image, RefreshControl, Text, Linking } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image, RefreshControl, Linking, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Screen from '../../components/common/Screen';
@@ -163,7 +163,7 @@ export default function HomeScreen() {
 
             {isLoading ? (
               <View className="py-10 justify-center items-center">
-                <RefreshControl refreshing={true} />
+                <ActivityIndicator size="small" color="#0B66EF" />
               </View>
             ) : recentNotices.length === 0 ? (
               <View className="mx-5 bg-slate-50 border border-dashed border-slate-200 rounded-3xl py-8 px-4 items-center justify-center">
@@ -185,13 +185,22 @@ export default function HomeScreen() {
           </View>
 
           {/* RECENT FILES & ATTACHMENTS SECTION */}
-          {noticesWithAttachments.length > 0 && (
-            <View className="mb-4">
-              <View className="px-5 mb-2.5">
-                <AppText className="text-slate-800 text-sm font-black">
-                  Important Attachments
-                </AppText>
+          <View className="mb-4">
+            <View className="px-5 mb-2.5">
+              <AppText className="text-slate-800 text-sm font-black">
+                Important Attachments
+              </AppText>
+            </View>
+            {isLoading ? (
+              <View className="py-6 justify-center items-center">
+                <ActivityIndicator size="small" color="#0B66EF" />
               </View>
+            ) : noticesWithAttachments.length === 0 ? (
+              <View className="mx-5 bg-slate-50 border border-dashed border-slate-200 rounded-3xl py-6 px-4 items-center justify-center">
+                <Ionicons name="attach-outline" size={24} color="#94A3B8" />
+                <AppText className="text-slate-400 text-[10px] font-bold mt-1">No attachments available</AppText>
+              </View>
+            ) : (
               <ScrollView 
                 horizontal 
                 showsHorizontalScrollIndicator={false}
@@ -233,8 +242,8 @@ export default function HomeScreen() {
                   );
                 })}
               </ScrollView>
-            </View>
-          )}
+            )}
+          </View>
         </ScrollView>
       </View>
     </Screen>
