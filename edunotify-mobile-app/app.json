@@ -24,12 +24,8 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "notification": {
-      "icon": "./assets/android-icon-monochrome.png",
-      "color": "#0B66EF"
-    },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/launcher.png"
     },
     "plugins": [
       "expo-router",
