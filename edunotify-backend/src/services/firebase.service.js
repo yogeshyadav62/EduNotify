@@ -15,8 +15,21 @@ let isConfigured = false;
 const serviceAccountPath = path.join(__dirname, '../config/firebase-service-account.json');
 
 try {
-  if (fs.existsSync(serviceAccountPath)) {
-    const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+  let serviceAccount = null;
+
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      console.log('ℹ️ Firebase config loaded from environment variable.');
+    } catch (e) {
+      console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT env var as JSON:', e.message);
+    }
+  } else if (fs.existsSync(serviceAccountPath)) {
+    serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+    console.log('ℹ️ Firebase config loaded from firebase-service-account.json.');
+  }
+
+  if (serviceAccount) {
     firebaseApp = initializeApp({
       credential: cert(serviceAccount)
     });
@@ -24,7 +37,7 @@ try {
     isConfigured = true;
     console.log('✅ Firebase Admin SDK initialized successfully.');
   } else {
-    console.log('⚠️ Firebase service account key not found at src/config/firebase-service-account.json. Push notifications are disabled in this session.');
+    console.log('⚠️ Firebase service account key not found (neither JSON file nor FIREBASE_SERVICE_ACCOUNT env var). Push notifications are disabled in this session.');
   }
 } catch (error) {
   console.error('❌ Failed to initialize Firebase Admin:', error.message);

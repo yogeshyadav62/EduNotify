@@ -68,18 +68,6 @@ class SocketService {
     });
   }
 
-  onDeletedNotification(callback: (payload: { id: string }) => void) {
-    if (!this.socket) return;
-
-    // Avoid duplicate listeners
-    this.socket.off('notification:deleted');
-    
-    this.socket.on('notification:deleted', (payload) => {
-      console.log('📡 Received real-time deletion:', payload);
-      callback(payload);
-    });
-  }
-
   getConnectionStatus() {
     return this.isConnected;
   }

@@ -92,29 +92,3 @@ export const emitNewNotification = (notification) => {
     console.log(`📡 Emitted class-wide notification to room: ${targetRoom}`);
   }
 };
-
-// Emit real-time notification deletion to target audience
-export const emitDeletedNotification = (notification) => {
-  if (!io) return;
-
-  const payload = {
-    id: (notification.id || notification._id || '').toString(),
-    targetType: notification.targetType,
-    classId: notification.classId,
-    studentId: notification.studentId
-  };
-
-  // 1. Emit to admin room
-  io.to('admin').emit('notification:deleted', payload);
-
-  // 2. Emit to specific student or class room
-  if (notification.targetType === 'student' && notification.studentId) {
-    const targetRoom = `student_${notification.studentId.toUpperCase().trim()}`;
-    io.to(targetRoom).emit('notification:deleted', payload);
-    console.log(`📡 Emitted personal deletion to room: ${targetRoom}`);
-  } else if (notification.targetType === 'class' && notification.classId) {
-    const targetRoom = `class_${notification.classId.toUpperCase().trim()}`;
-    io.to(targetRoom).emit('notification:deleted', payload);
-    console.log(`📡 Emitted class-wide deletion to room: ${targetRoom}`);
-  }
-};

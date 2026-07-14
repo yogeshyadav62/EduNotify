@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { io, Socket } from 'socket.io-client';
-import { BASE_URL } from './utils/Routes';
 import { Sidebar } from './components/Sidebar';
 import { DashboardOverview } from './pages/Dashboard/DashboardOverview';
 import { ClassManagement } from './pages/Classes/ClassManagement';
@@ -52,7 +51,9 @@ export default function App() {
     }
 
     // Initialize Socket connection
-    const socketUrl = BASE_URL.replace('/api', '');
+    const socketUrl = import.meta.env.DEV
+      ? 'http://localhost:4500'
+      : 'https://edunotify-r1pc.onrender.com';
     const newSocket = io(socketUrl);
     setSocket(newSocket);
 
@@ -127,11 +128,6 @@ export default function App() {
       });
 
       // Invalidate ALL notification query variants (includes paginated keys like ['notifications', page, ...])
-      queryClient.invalidateQueries({ queryKey: ['notifications'], exact: false });
-    });
-
-    newSocket.on('notification:deleted', (payload) => {
-      console.log('📡 Notification deleted event received, invalidating queries...', payload);
       queryClient.invalidateQueries({ queryKey: ['notifications'], exact: false });
     });
 

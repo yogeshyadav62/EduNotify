@@ -8,7 +8,7 @@ import { store } from '../src/redux/store';
 import { queryClient } from '../src/lib/queryClient';
 import { useAppDispatch, useAppSelector } from '../src/redux/hooks';
 import { hideToast, showToast } from '../src/redux/slices/uiSlice';
-import { addNewNotification, removeNotification } from '../src/redux/slices/notificationSlice';
+import { addNewNotification } from '../src/redux/slices/notificationSlice';
 import socketService from '../src/utils/socketService';
 import AppText from '../src/Screens/components/common/AppText';
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated';
@@ -38,7 +38,7 @@ function RootLayoutNav() {
   useEffect(() => {
     if (isAuthenticated && user && user.classId && user.studentId) {
       console.log(`🔌 Initializing Socket.IO connection for Student: ${user.studentId}, Class: ${user.classId}`);
-
+      
       // Connect to server and subscribe to class and student channels
       socketService.connect(user.classId, user.studentId);
 
@@ -46,7 +46,7 @@ function RootLayoutNav() {
       socketService.onNewNotification((newNotice) => {
         // 1. Insert into local Redux store
         dispatch(addNewNotification(newNotice));
-
+        
         // 2. Trigger slide-down alert notification
         dispatch(showToast({
           message: `New notice: "${newNotice.title}"`,
