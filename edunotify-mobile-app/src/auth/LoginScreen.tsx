@@ -112,8 +112,8 @@ export default function LoginScreen() {
               className="bg-white border-slate-200/80 rounded-2xl px-4"
             />
 
-            {/* Remember Me / Forgot details row */}
-            <View className="flex-row justify-between items-center mt-1.5 px-1">
+            {/* Remember Me Row */}
+            <View className="flex-row justify-start items-center mt-1.5 px-1">
               <TouchableOpacity
                 onPress={() => setRememberMe(!rememberMe)}
                 className="flex-row items-center"
@@ -124,12 +124,6 @@ export default function LoginScreen() {
                 </View>
                 <AppText className="text-slate-500 text-sm font-bold">
                   Remember me
-                </AppText>
-              </TouchableOpacity>
-
-              <TouchableOpacity>
-                <AppText className="text-[#0B66EF] text-sm font-extrabold">
-                  Forgot details?
                 </AppText>
               </TouchableOpacity>
             </View>
