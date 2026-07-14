@@ -58,7 +58,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveT
 
   const recentNotices = notifications
     .filter((n) => n.status === 'published')
-    .slice(0, 4);
+    .slice(0, 3);
 
   const isLoading = loadingClasses || loadingStudents || loadingNotices;
 
@@ -123,7 +123,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveT
               View All
             </button>
           </div>
-          <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
+          <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, maxHeight: '380px', overflowY: 'auto' }}>
             {recentNotices.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)' }}>
                 No announcements published yet.
@@ -133,32 +133,32 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveT
                 <div
                   key={notice.id}
                   style={{
-                    padding: '16px',
+                    padding: '12px',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-color)',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px',
+                    gap: '6px',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <h4 style={{ fontWeight: 600, textTransform: 'capitalize' }}>{notice.title}</h4>
+                    <h4 style={{ fontWeight: 600, textTransform: 'capitalize', fontSize: '14px' }}>{notice.title}</h4>
                     <span className={`badge badge-${
                       notice.category === 'academic' ? 'purple' :
                       notice.category === 'fees' ? 'green' :
                       notice.category === 'events' ? 'yellow' :
                       notice.category === 'transport' ? 'red' : 'gray'
-                    }`}>
+                    }`} style={{ fontSize: '10px', padding: '2px 6px' }}>
                       {notice.category}
                     </span>
                   </div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                    {notice.description.length > 150 ? notice.description.substring(0, 150) + '...' : notice.description}
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                    {notice.description.length > 100 ? notice.description.substring(0, 100) + '...' : notice.description}
                   </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
                     <span style={{ textTransform: 'capitalize' }}>By: {notice.facultyName}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <Calendar size={12} />
+                      <Calendar size={11} />
                       {new Date(notice.dateTime).toLocaleDateString()}
                     </span>
                   </div>
