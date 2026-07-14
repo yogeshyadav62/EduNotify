@@ -78,12 +78,13 @@ export const NotificationCard = ({
 
           {/* Middle Row: Title & Description */}
           <View className="mb-1.5">
-            <AppText className="text-slate-800 text-[11px] font-bold mb-0.5 leading-3.5" numberOfLines={1}>
+            <AppText className="text-slate-800 text-[11px] font-bold mb-0.5 leading-3.5" style={{ textTransform: 'capitalize' }} numberOfLines={1}>
               {notification.title}
             </AppText>
             <AppText
               numberOfLines={1}
               className="text-slate-500 text-[9px] leading-3"
+              style={{ textTransform: 'capitalize' }}
             >
               {notification.description}
             </AppText>
@@ -102,10 +103,10 @@ export const NotificationCard = ({
                       resizeMode="cover"
                     />
                     <View className="flex-1">
-                      <AppText className="text-slate-700 text-[9px] font-extrabold" numberOfLines={1}>
+                      <AppText className="text-slate-700 text-[9px] font-extrabold" style={{ textTransform: 'capitalize' }} numberOfLines={1}>
                         Image Attachment
                       </AppText>
-                      <AppText className="text-slate-400 text-[7px] font-bold">
+                      <AppText className="text-slate-400 text-[7px] font-bold" style={{ textTransform: 'capitalize' }}>
                         Tap to view image
                       </AppText>
                     </View>
@@ -117,10 +118,10 @@ export const NotificationCard = ({
                       <Ionicons name="document-text" size={12} color="#EF4444" />
                     </View>
                     <View className="flex-1">
-                      <AppText className="text-slate-700 text-[9px] font-extrabold" numberOfLines={1}>
+                      <AppText className="text-slate-700 text-[9px] font-extrabold" style={{ textTransform: 'capitalize' }} numberOfLines={1}>
                         {notification.attachmentType === 'application/pdf' ? 'PDF Document' : 'Document Attachment'}
                       </AppText>
-                      <AppText className="text-slate-400 text-[7px] font-bold">
+                      <AppText className="text-slate-400 text-[7px] font-bold" style={{ textTransform: 'capitalize' }}>
                         Tap to open file
                       </AppText>
                     </View>
@@ -144,7 +145,7 @@ export const NotificationCard = ({
                   <Ionicons name="person" size={8} color={colors.slate[400]} />
                 </View>
               )}
-              <AppText className="text-[8px] font-bold text-slate-500">
+              <AppText className="text-[8px] font-bold text-slate-500" style={{ textTransform: 'capitalize' }}>
                 {notification.facultyName}
               </AppText>
             </View>

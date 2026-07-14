@@ -466,7 +466,8 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                           color: 'var(--text-secondary)',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
-                          textOverflow: 'ellipsis'
+                          textOverflow: 'ellipsis',
+                          textTransform: 'capitalize'
                         }} 
                         title={n.description}
                       >
@@ -477,12 +478,15 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                       </div>
                     </td>
                     <td>
-                      <span className={`badge badge-${
-                        n.category === 'academic' ? 'purple' :
-                        n.category === 'fees' ? 'green' :
-                        n.category === 'events' ? 'yellow' :
-                        n.category === 'transport' ? 'red' : 'gray'
-                      }`}>
+                      <span 
+                        style={{ textTransform: 'capitalize' }}
+                        className={`badge badge-${
+                          n.category === 'academic' ? 'purple' :
+                          n.category === 'fees' ? 'green' :
+                          n.category === 'events' ? 'yellow' :
+                          n.category === 'transport' ? 'red' : 'gray'
+                        }`}
+                      >
                         {n.category}
                       </span>
                     </td>
