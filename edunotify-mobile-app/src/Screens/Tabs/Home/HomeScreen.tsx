@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, Modal, ActivityIndicator, Image, TextInput, RefreshControl, FlatList, useWindowDimensions, Dimensions, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image, RefreshControl, Text, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { FadeIn, SlideInLeft, SlideOutLeft } from 'react-native-reanimated';
 import Screen from '../../components/common/Screen';
 import AppText from '../../components/common/AppText';
-import AppButton from '../../components/common/AppButton';
-import EmptyState from '../../components/common/EmptyState';
 import NotificationCard from '../../components/notification/NotificationCard';
 import { useNotifications } from '../../../hooks/useNotifications';
-import { useLogin } from '../../../hooks/useLogin';
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
-import { showToast, setActiveModal } from '../../../redux/slices/uiSlice';
-import colors from '../../../theme/colors';
+import { setActiveModal } from '../../../redux/slices/uiSlice';
 import { Notification } from '../../../types/notification';
 
 export default function HomeScreen() {
@@ -20,25 +15,15 @@ export default function HomeScreen() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
 
-  // Load notifications state
   const {
     notifications,
     unreadCount,
     readNotificationIds,
     isLoading,
-    isFetchingNextPage,
-    filter,
-    setFilter,
     markAsRead,
     refresh,
-    loadMore,
-    hasMore,
   } = useNotifications();
 
-  // Search input state
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Modals state
   const [refreshing, setRefreshing] = useState(false);
 
   // Pull down to refresh handler
@@ -48,58 +33,8 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
-  const horizontalListRef = React.useRef<FlatList>(null);
-  const { width: screenWidth } = useWindowDimensions();
-  const screenHeight = Dimensions.get('screen').height;
-
-  const [tabLoading, setTabLoading] = useState<{ [key: string]: boolean }>({});
-
-  const handleFilterChange = (newFilter: 'all' | 'class' | 'personal') => {
-    setTabLoading(prev => ({ ...prev, [newFilter]: true }));
-    setFilter(newFilter);
-    const index = newFilter === 'all' ? 0 : newFilter === 'class' ? 1 : 2;
-    setTimeout(() => {
-      horizontalListRef.current?.scrollToIndex({ index, animated: true });
-    }, 50);
-    setTimeout(() => {
-      setTabLoading(prev => ({ ...prev, [newFilter]: false }));
-    }, 400);
-  };
-
-  const handleMomentumScrollEnd = (event: any) => {
-    const contentOffset = event.nativeEvent.contentOffset.x;
-    const layoutWidth = event.nativeEvent.layoutMeasurement.width;
-    if (layoutWidth === 0) return;
-    const index = Math.round(contentOffset / layoutWidth);
-    const newFilter = index === 0 ? 'all' : index === 1 ? 'class' : 'personal';
-    if (filter !== newFilter) {
-      setTabLoading(prev => ({ ...prev, [newFilter]: true }));
-      setFilter(newFilter);
-      setTimeout(() => {
-        setTabLoading(prev => ({ ...prev, [newFilter]: false }));
-      }, 400);
-    }
-  };
-
-  const getFilteredNotifications = (category: 'all' | 'class' | 'personal') => {
-    const query = searchQuery.toLowerCase().trim();
-
-    // First, filter by the category
-    const categoryItems = notifications.filter(item => {
-      if (category === 'all') return true;
-      if (category === 'class') return item.studentId === null; // broadcast
-      if (category === 'personal') return item.studentId !== null; // personal
-      return true;
-    });
-
-    // Then, apply search query
-    if (!query) return categoryItems;
-    return categoryItems.filter(item =>
-      item.title.toLowerCase().includes(query) ||
-      item.description.toLowerCase().includes(query) ||
-      item.facultyName.toLowerCase().includes(query)
-    );
-  };
+  const recentNotices = notifications.slice(0, 3);
+  const noticesWithAttachments = notifications.filter(n => n.attachmentUrl).slice(0, 4);
 
   const handleCardPress = (notification: Notification) => {
     router.push({
@@ -109,77 +44,6 @@ export default function HomeScreen() {
     if (!readNotificationIds.includes(notification.id)) {
       markAsRead(notification.id);
     }
-  };
-
-
-
-  const renderNotificationPage = (category: 'all' | 'class' | 'personal') => {
-    const list = getFilteredNotifications(category);
-
-    if ((isLoading || tabLoading[category]) && !refreshing) {
-      return (
-        <View style={{ width: screenWidth }} className="justify-center items-center flex-1 py-10">
-          <ActivityIndicator size="small" color="#0B66EF" />
-        </View>
-      );
-    }
-
-    if (list.length === 0) {
-      return (
-        <View style={{ width: screenWidth }} className="px-8 justify-center items-center flex-1 pb-12 pt-16">
-          <View className="w-24 h-24 bg-blue-50 rounded-full justify-center items-center mb-5 border border-blue-100/50">
-            <Ionicons name="notifications-outline" size={44} color="#0B66EF" />
-          </View>
-          <AppText className="text-slate-800 text-lg font-black text-center mb-1.5">
-            No Notifications Yet!
-          </AppText>
-          <AppText className="text-slate-400 text-xs font-bold text-center leading-5 max-w-[250px]">
-            You're all caught up. New notifications will appear here.
-          </AppText>
-        </View>
-      );
-    }
-
-    return (
-      <View style={{ width: screenWidth }} className="flex-1">
-        <FlatList<Notification>
-          data={list}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => (
-            <NotificationCard
-              notification={item}
-              index={index}
-              isRead={readNotificationIds.includes(item.id)}
-              onPress={() => handleCardPress(item)}
-              onMarkAsRead={() => markAsRead(item.id)}
-            />
-          )}
-          contentContainerStyle={{ paddingBottom: 60 }}
-          showsVerticalScrollIndicator={false}
-          onEndReached={() => { if (hasMore && !isFetchingNextPage) loadMore(); }}
-          onEndReachedThreshold={0.3}
-          ListFooterComponent={
-            isFetchingNextPage ? (
-              <View style={{ padding: 16, alignItems: 'center' }}>
-                <ActivityIndicator size="small" color="#0B66EF" />
-              </View>
-            ) : hasMore ? (
-              <View style={{ padding: 8, alignItems: 'center' }}>
-                <Text style={{ fontSize: 10, color: '#94A3B8', fontWeight: '600' }}>Scroll for more</Text>
-              </View>
-            ) : null
-          }
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              colors={['#0B66EF']}
-              tintColor="#0B66EF"
-            />
-          }
-        />
-      </View>
-    );
   };
 
   return (
@@ -214,154 +78,165 @@ export default function HomeScreen() {
       {/* Profile summary card inside header */}
       <View className="px-5 pb-6 bg-[#0B66EF]">
         <AppText className="text-white font-black" style={{ fontSize: 28, lineHeight: 44, textTransform: 'capitalize' }}>
-          Hello, {user?.name?.split(' ')[0] || 'Yogesh'} 👋
+          Hello, {user?.name?.split(' ')[0] || 'Student'} 👋
         </AppText>
         <AppText className="text-white/80 text-sm font-semibold mt-1">
-          Class: {user?.classId || 'CS-202'}  |  Student: {user?.studentId || 'STU-101'}
+          Class: {user?.classId || 'N/A'}  |  Student: {user?.studentId || 'N/A'}
         </AppText>
       </View>
 
       {/* 2. OVERLAY CONTAINER (White card overlapping header) */}
       <View className="flex-1 bg-white rounded-t-[36px] -mt-2 pt-6 shadow-2xl">
-
-        {/* Search Bar & Notification Bell row */}
-        <View className="flex-row px-5 mb-4 items-center">
-          <View className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl flex-row items-center px-4 py-2.5 shadow-sm mr-2.5">
-            <Ionicons name="search" size={18} color="#94A3B8" style={{ marginRight: 8 }} />
-            <TextInput
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder="Search notifications..."
-              placeholderTextColor="#94A3B8"
-              className="flex-1 text-slate-800 text-xs font-semibold p-0"
-              autoCorrect={false}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 40 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              colors={['#0B66EF']}
+              tintColor="#0B66EF"
             />
+          }
+        >
+          {/* STATS GRID */}
+          <View className="flex-row px-5 mb-6 justify-between">
+            {/* Card 1: Unread */}
+            <View className="bg-red-50 border border-red-100 rounded-3xl p-4 flex-1 mr-2.5 items-center justify-center shadow-sm">
+              <View className="bg-red-100 w-9 h-9 rounded-full items-center justify-center mb-2">
+                <Ionicons name="mail-unread-outline" size={18} color="#EF4444" />
+              </View>
+              <AppText className="text-red-700 text-lg font-black">{unreadCount}</AppText>
+              <AppText className="text-red-500 text-[10px] font-bold mt-0.5">Unread Logs</AppText>
+            </View>
+
+            {/* Card 2: Total Announcements */}
+            <View className="bg-blue-50 border border-blue-100 rounded-3xl p-4 flex-1 mr-2.5 items-center justify-center shadow-sm">
+              <View className="bg-blue-100 w-9 h-9 rounded-full items-center justify-center mb-2">
+                <Ionicons name="megaphone-outline" size={18} color="#0B66EF" />
+              </View>
+              <AppText className="text-blue-700 text-lg font-black">{notifications.length}</AppText>
+              <AppText className="text-blue-500 text-[10px] font-bold mt-0.5">Total Notices</AppText>
+            </View>
+
+            {/* Card 3: Class ID */}
+            <View className="bg-purple-50 border border-purple-100 rounded-3xl p-4 flex-1 items-center justify-center shadow-sm">
+              <View className="bg-purple-100 w-9 h-9 rounded-full items-center justify-center mb-2">
+                <Ionicons name="school-outline" size={18} color="#8B5CF6" />
+              </View>
+              <AppText className="text-purple-700 text-[13px] font-black" numberOfLines={1}>{user?.classId || 'N/A'}</AppText>
+              <AppText className="text-purple-500 text-[10px] font-bold mt-1.5">Class Code</AppText>
+            </View>
           </View>
 
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/notifications')}
-            className="relative bg-white border border-slate-100 rounded-2xl w-[42px] h-[42px] items-center justify-center shadow-sm active:bg-slate-50"
-          >
-            <Ionicons name="notifications-outline" size={20} color="#1E293B" />
-            {unreadCount > 0 && (
-              <View
-                style={{
-                  position: 'absolute',
-                  top: -2,
-                  right: -2,
-                  backgroundColor: '#EF4444',
-                  borderRadius: 7.5,
-                  width: 15,
-                  height: 15,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 1,
-                  borderColor: '#FFFFFF',
-                  elevation: 3,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.2,
-                  shadowRadius: 1,
-                }}
-              >
-                <Text
-                  className="text-white font-black"
-                  style={{
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    includeFontPadding: false,
-                    fontSize: 8,
-                    lineHeight: 12,
-                  }}
-                >
-                  {unreadCount}
-                </Text>
+          {/* QUICK LINKS / ACTION BADGES */}
+          <View className="flex-row px-5 mb-6 justify-between gap-3">
+            <TouchableOpacity 
+              onPress={() => router.push('/(tabs)/notifications')}
+              className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl flex-row items-center justify-center py-3 shadow-sm active:bg-slate-100"
+            >
+              <Ionicons name="chatbubbles-outline" size={16} color="#475569" style={{ marginRight: 6 }} />
+              <AppText className="text-slate-700 text-xs font-bold">Open Hub</AppText>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => router.push('/(tabs)/profile')}
+              className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl flex-row items-center justify-center py-3 shadow-sm active:bg-slate-100"
+            >
+              <Ionicons name="person-outline" size={16} color="#475569" style={{ marginRight: 6 }} />
+              <AppText className="text-slate-700 text-xs font-bold">View Profile</AppText>
+            </TouchableOpacity>
+          </View>
+
+          {/* RECENT NOTICES SECTION */}
+          <View className="mb-6">
+            <View className="flex-row justify-between items-center px-5 mb-3.5">
+              <AppText className="text-slate-800 text-base font-black">
+                Recent Announcements
+              </AppText>
+              <TouchableOpacity onPress={() => router.push('/(tabs)/notifications')}>
+                <AppText className="text-[#0B66EF] text-xs font-bold">
+                  View All
+                </AppText>
+              </TouchableOpacity>
+            </View>
+
+            {isLoading ? (
+              <View className="py-10 justify-center items-center">
+                <RefreshControl refreshing={true} />
               </View>
+            ) : recentNotices.length === 0 ? (
+              <View className="mx-5 bg-slate-50 border border-dashed border-slate-200 rounded-3xl py-8 px-4 items-center justify-center">
+                <Ionicons name="notifications-off-outline" size={32} color="#94A3B8" />
+                <AppText className="text-slate-400 text-xs font-bold mt-2">No active announcements</AppText>
+              </View>
+            ) : (
+              recentNotices.map((item, index) => (
+                <NotificationCard
+                  key={item.id}
+                  notification={item}
+                  index={index}
+                  isRead={readNotificationIds.includes(item.id)}
+                  onPress={() => handleCardPress(item)}
+                  onMarkAsRead={() => markAsRead(item.id)}
+                />
+              ))
             )}
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        {/* Category Filters Chips (Screen 3 Chips) */}
-        <View className="flex-row px-5 mb-4 justify-start">
-          {/* Chip All */}
-          <TouchableOpacity
-            onPress={() => handleFilterChange('all')}
-            className={`flex-row items-center px-5 py-2 rounded-2xl border mr-2.5 ${filter === 'all'
-              ? 'bg-[#0B66EF] border-[#0B66EF]'
-              : 'bg-white border-slate-100'
-              }`}
-          >
-            <AppText className={`text-xs font-bold ${filter === 'all' ? 'text-white' : 'text-slate-700'}`}>
-              All
-            </AppText>
-          </TouchableOpacity>
-
-          {/* Chip Broadcast */}
-          <TouchableOpacity
-            onPress={() => handleFilterChange('class')}
-            className={`flex-row items-center px-5 py-2 rounded-2xl border mr-2.5 ${filter === 'class'
-              ? 'bg-orange-500 border-orange-500'
-              : 'bg-white border-slate-100'
-              }`}
-          >
-            <Ionicons
-              name={filter === 'class' ? 'volume-high' : 'volume-high-outline'}
-              size={14}
-              color={filter === 'class' ? '#FFFFFF' : '#F97316'}
-              style={{ marginRight: 6 }}
-            />
-            <AppText className={`text-xs font-bold ${filter === 'class' ? 'text-white' : 'text-slate-700'}`}>
-              Broadcast
-            </AppText>
-          </TouchableOpacity>
-
-          {/* Chip Personal */}
-          <TouchableOpacity
-            onPress={() => handleFilterChange('personal')}
-            className={`flex-row items-center px-5 py-2 rounded-2xl border ${filter === 'personal'
-              ? 'bg-[#0B66EF] border-[#0B66EF]'
-              : 'bg-white border-slate-100'
-              }`}
-          >
-            <Ionicons
-              name={filter === 'personal' ? 'person' : 'person-outline'}
-              size={14}
-              color={filter === 'personal' ? '#FFFFFF' : '#0B66EF'}
-              style={{ marginRight: 6 }}
-            />
-            <AppText className={`text-xs font-bold ${filter === 'personal' ? 'text-white' : 'text-slate-700'}`}>
-              Personal
-            </AppText>
-          </TouchableOpacity>
-        </View>
-
-        {/* Reload Instruction label */}
-        <View className="flex-row justify-center items-center py-1 mb-2">
-          <Ionicons name="arrow-down" size={11} color="#0B66EF" style={{ marginRight: 4 }} />
-          <AppText className="text-[10px] text-[#0B66EF] font-bold">
-            Pull down to refresh
-          </AppText>
-        </View>
-
-        {/* Horizontal Swiper for swipeable categories */}
-        <FlatList
-          ref={horizontalListRef}
-          data={['all', 'class', 'personal']}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => renderNotificationPage(item as 'all' | 'class' | 'personal')}
-          onMomentumScrollEnd={handleMomentumScrollEnd}
-          getItemLayout={(data, index) => ({
-            length: screenWidth,
-            offset: screenWidth * index,
-            index,
-          })}
-        />
+          {/* RECENT FILES & ATTACHMENTS SECTION */}
+          {noticesWithAttachments.length > 0 && (
+            <View className="mb-4">
+              <View className="px-5 mb-3">
+                <AppText className="text-slate-800 text-base font-black">
+                  Important Attachments
+                </AppText>
+              </View>
+              <ScrollView 
+                horizontal 
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingLeft: 20, paddingRight: 8 }}
+              >
+                {noticesWithAttachments.map((item) => {
+                  const isPdf = item.attachmentType === 'application/pdf';
+                  const isImage = item.attachmentType?.startsWith('image/');
+                  
+                  return (
+                    <TouchableOpacity
+                      key={`att-${item.id}`}
+                      onPress={() => {
+                        if (item.attachmentUrl) {
+                          Linking.openURL(item.attachmentUrl).catch(err => console.error("Couldn't open URL", err));
+                        }
+                      }}
+                      className="bg-slate-50 border border-slate-100 rounded-3xl p-3 w-40 mr-3 shadow-sm active:bg-slate-100"
+                    >
+                      <View className="flex-row items-center justify-between mb-2">
+                        <View className={`w-8 h-8 rounded-xl items-center justify-center ${isPdf ? 'bg-red-100' : isImage ? 'bg-green-100' : 'bg-blue-100'}`}>
+                          <Ionicons 
+                            name={isPdf ? 'document-text' : isImage ? 'image' : 'attach'} 
+                            size={16} 
+                            color={isPdf ? '#DC2626' : isImage ? '#16A34A' : '#2563EB'} 
+                          />
+                        </View>
+                        <AppText className="text-[8px] font-bold text-slate-400 uppercase">{item.category}</AppText>
+                      </View>
+                      
+                      <AppText className="text-slate-800 text-[11px] font-black mb-1.5 leading-4" numberOfLines={2}>
+                        {item.title}
+                      </AppText>
+                      
+                      <AppText className="text-blue-600 text-[9px] font-bold">
+                        Tap to download
+                      </AppText>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          )}
+        </ScrollView>
       </View>
-
-
     </Screen>
   );
 }
