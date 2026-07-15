@@ -76,9 +76,12 @@ Use these combination of credentials to log in to the mobile feed and test the s
 
 | Student Name | Student ID | Class ID (Password) | Target Filtering Rules |
 | :--- | :--- | :--- | :--- |
-| **Aarav Sharma** | `STU-101` | `CS-101` | Renders `CS-101` broadcasts & Aarav's personal alerts. |
-| **Priyal Patel** | `STU-202` | `CS-202` | Renders `CS-202` broadcasts & Priyal's personal alerts. |
-| **Rohan Joshi** | `STU-303` | `BCA-2A` | Renders `BCA-2A` broadcasts & Rohan's personal alerts. |
+
+| **Yogesh Yadav** | `STU-101` | `CS-101` | Receives CS-202 announcements and personal notifications |
+| **Tina Pawar** | `STU-104` | `MCA-104` | Receives CS-202 
+
+announcements and personal notifications |
+
 
 *(Note: There is no separate password field in the student app. Use the **Student ID** and **Class ID** from the table above to authenticate).*
 
