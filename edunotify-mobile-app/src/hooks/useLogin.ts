@@ -6,6 +6,7 @@ import { loginStart, loginSuccess, loginFailure, logout } from '../redux/slices/
 import { clearNotificationsState } from '../redux/slices/notificationSlice';
 import { storage } from '../utils/storage';
 import { showToast } from '../redux/slices/uiSlice';
+import { queryClient } from '../lib/queryClient';
 
 export const useLogin = () => {
   const dispatch = useAppDispatch();
@@ -59,6 +60,8 @@ export const useLogin = () => {
     try {
       setAuthToken(null);
       await storage.removeAuth();
+      // Clear React Query cache to prevent data leak across logins
+      queryClient.clear();
       dispatch(logout());
       dispatch(clearNotificationsState());
       dispatch(showToast({ message: 'Logged out successfully', type: 'info' }));

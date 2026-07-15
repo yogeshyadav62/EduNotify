@@ -162,13 +162,30 @@ export default function NotificationDetailScreen() {
                         Tap to open in browser
                       </AppText>
                     </View>
-                    <Ionicons
-                      name="open-outline"
-                      size={18}
-                      color={isPdf ? '#DC2626' : '#2563EB'}
-                    />
                   </TouchableOpacity>
                 ) : null}
+
+                {/* Download Action Button */}
+                <TouchableOpacity
+                  onPress={handleOpenAttachment}
+                  activeOpacity={0.8}
+                  style={{
+                    marginTop: 12,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#EFF6FF',
+                    borderWidth: 1,
+                    borderColor: '#BFDBFE',
+                    borderRadius: 14,
+                    paddingVertical: 12,
+                  }}
+                >
+                  <Ionicons name="download-outline" size={16} color="#2563EB" style={{ marginRight: 6 }} />
+                  <AppText style={{ fontSize: 11, fontWeight: '700', color: '#2563EB', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                    {isPdf ? 'Download PDF Document' : isImage ? 'Download Image File' : 'Download Attachment'}
+                  </AppText>
+                </TouchableOpacity>
               </View>
             )}
           </View>

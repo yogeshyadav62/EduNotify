@@ -30,7 +30,7 @@ export const useNotifications = () => {
     refetch,
     isRefetching,
   } = useInfiniteQuery({
-    queryKey: ['notifications-paged'],
+    queryKey: ['notifications-paged', user?.studentId],
     queryFn: ({ pageParam = 1 }) => api.fetchNotificationsPaged(pageParam as number, PAGE_SIZE),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

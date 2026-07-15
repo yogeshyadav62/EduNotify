@@ -7,11 +7,11 @@ export const injectStore = (_store: any) => {
 export const handleApiError = (error: any) => {
   if (error.response) {
     const { status, data } = error.response;
-    console.log('--- API Error Response ---');
-    console.log('Status:', status);
-    console.log('Data:', JSON.stringify(data, null, 2));
-    console.log('Normalized Message:', error.message);
-    console.log('-------------------------');
+    // console.log('--- API Error Response ---');
+    // console.log('Status:', status);
+    // console.log('Data:', JSON.stringify(data, null, 2));
+    // console.log('Normalized Message:', error.message);
+    // console.log('-------------------------');
     throw {
       type: 'response',
       status,

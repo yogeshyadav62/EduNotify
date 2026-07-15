@@ -1,4 +1,5 @@
-export const BASE_URL = "https://edunotify-r1pc.onrender.com/api";
+
+export const BASE_URL = "http://localhost:4500/api";
 
 export const ROUTES = {
     login: BASE_URL + "/admin/auth/login",

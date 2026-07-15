@@ -50,15 +50,15 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({ setActiveT
     queryFn: () => getData<NotificationData[]>(ROUTES.notifications),
   });
 
-  const totalClasses = classes.length;
-  const totalStudents = students.length;
-  const totalNotices = notifications.length;
-  const publishedNotices = notifications.filter((n) => n.status === 'published').length;
-  const scheduledNotices = notifications.filter((n) => n.status === 'draft' && n.scheduledFor).length;
+  const totalClasses = Array.isArray(classes) ? classes.length : 0;
+  const totalStudents = Array.isArray(students) ? students.length : 0;
+  const totalNotices = Array.isArray(notifications) ? notifications.length : 0;
+  const publishedNotices = Array.isArray(notifications) ? notifications.filter((n) => n.status === 'published').length : 0;
+  const scheduledNotices = Array.isArray(notifications) ? notifications.filter((n) => n.status === 'draft' && n.scheduledFor).length : 0;
 
-  const recentNotices = notifications
-    .filter((n) => n.status === 'published')
-    .slice(0, 3);
+  const recentNotices = Array.isArray(notifications)
+    ? notifications.filter((n) => n.status === 'published').slice(0, 3)
+    : [];
 
   const isLoading = loadingClasses || loadingStudents || loadingNotices;
 

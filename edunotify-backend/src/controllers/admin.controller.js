@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Class, Student, Notification, Admin } from '../models/index.js';
-import { emitNewNotification } from '../loaders/socket.js';
+import { emitNewNotification, emitDeletedNotification } from '../loaders/socket.js';
 import { firebaseService } from '../services/firebase.service.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'edunotifysecretkey123';
@@ -431,6 +431,7 @@ export const deleteNotification = async (req, res) => {
     if (!notification) {
       return res.status(404).json({ message: 'Notification not found' });
     }
+    emitDeletedNotification(notification);
     return res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     console.error('Error deleting notification:', error);

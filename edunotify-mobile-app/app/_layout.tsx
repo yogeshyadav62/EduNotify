@@ -74,11 +74,45 @@ function RootLayoutNav() {
           message: `New notice: "${newNotice.title}"`,
           type: 'info'
         }));
+
+        // 3. Update React Query cache so pagination/refetch doesn't revert state
+        queryClient.setQueriesData({ queryKey: ['notifications-paged'], exact: false }, (oldData: any) => {
+          if (!oldData || !oldData.pages || oldData.pages.length === 0) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any, idx: number) => {
+              if (idx === 0) {
+                const exists = page.notifications.some((n: any) => n.id === newNotice.id);
+                if (exists) return page;
+                return {
+                  ...page,
+                  notifications: [newNotice, ...page.notifications],
+                  totalCount: (page.totalCount || 0) + 1
+                };
+              }
+              return page;
+            })
+          };
+        });
       });
 
       // Listen for real-time deletions
       socketService.onDeletedNotification((payload) => {
+        // 1. Remove from Redux store
         dispatch(removeNotification(payload.id));
+
+        // 2. Remove from React Query cache
+        queryClient.setQueriesData({ queryKey: ['notifications-paged'], exact: false }, (oldData: any) => {
+          if (!oldData || !oldData.pages) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              notifications: page.notifications.filter((n: any) => n.id !== payload.id),
+              totalCount: Math.max(0, (page.totalCount || 1) - 1)
+            }))
+          };
+        });
       });
     } else {
       socketService.disconnect();
